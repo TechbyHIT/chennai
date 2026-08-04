@@ -1,0 +1,54 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/playwright-report
+/test-results
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env
+.env*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# reports generated locally
+/reports/*.json
+!/reports/.gitkeep
+
+# large synced project photos (regenerate with npm run media:sync)
+/public/images/projects/
+/public/images/hero-balcony.jpg
+/public/images/open-graph.jpg
+/public/images/logo.jpg
+
+# IDE
+.idea
+.vscode
