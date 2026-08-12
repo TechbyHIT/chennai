@@ -1,4 +1,4 @@
-import { QuoteForm } from "@/components/forms/QuoteForm";
+import { QuoteFormLoader } from "@/components/forms/QuoteFormLoader";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { ImageGallery } from "@/components/media/ImageGallery";
 import { CtaBanner } from "@/components/sections/CtaBanner";
@@ -32,7 +32,7 @@ export default function ContactPage() {
               { name: "Contact", href: "/contact/" },
             ]}
           />
-          <ImageGallery images={photos} columns="4" />
+          <ImageGallery images={photos} columns="4" priorityCount={0} />
           <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
             <div className="space-y-6">
               <div className="space-y-4">
@@ -73,7 +73,7 @@ export default function ContactPage() {
             </div>
             <div className="space-y-4">
               <Heading as="h2">Request a quotation</Heading>
-              <QuoteForm />
+              <QuoteFormLoader />
             </div>
           </div>
         </Container>

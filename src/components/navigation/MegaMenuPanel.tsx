@@ -12,7 +12,7 @@ export function MegaMenuPanel({
 }) {
   return (
     <div className="absolute left-1/2 top-full z-50 w-[min(78rem,calc(100vw-1.5rem))] -translate-x-1/2 pt-3">
-      <div className="overflow-hidden rounded-[1.5rem] border border-brand-100 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.14)]">
+      <div className="overflow-hidden rounded-[1.5rem] border border-brand-100 bg-white shadow-[0_30px_80px_rgba(10,29,55,0.14)]">
         <div className="max-h-[min(72vh,40rem)] overflow-y-auto p-5 sm:p-6">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {columns.map((column) => (

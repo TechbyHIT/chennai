@@ -1,50 +1,49 @@
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
-import { SITE_CONFIG } from "../src/config/site";
-import { getIndexablePages } from "../src/lib/pages/page-registry";
+import {
+  countHighIntentSitemapUrls,
+  listSitemapShardKeys,
+  resolveShardEntries,
+} from "../src/lib/sitemap/shards";
+import {
+  assertValidSitemapIndex,
+  assertValidUrlSet,
+  renderSitemapIndexXml,
+  renderSitemapShardXml,
+} from "../src/lib/sitemap/render";
 
-const pages = getIndexablePages();
-const groups = new Map<string, typeof pages>();
-
-for (const page of pages) {
-  const group = page.sitemapGroup ?? "core";
-  groups.set(group, [...(groups.get(group) ?? []), page]);
-}
-
-const files: Array<{ group: string; count: number; file: string }> = [];
+/**
+ * Offline high-intent sitemap generation + validation.
+ * Live site serves the same shards via /sitemap.xml and /sitemap/[id].xml.
+ */
 const outDir = join(process.cwd(), "reports", "sitemaps");
 mkdirSync(outDir, { recursive: true });
 
-for (const [group, groupPages] of groups) {
-  const chunks = Math.ceil(groupPages.length / SITE_CONFIG.maxSitemapUrlsPerFile) || 1;
-  for (let i = 0; i < chunks; i += 1) {
-    const slice = groupPages.slice(
-      i * SITE_CONFIG.maxSitemapUrlsPerFile,
-      (i + 1) * SITE_CONFIG.maxSitemapUrlsPerFile,
-    );
-    const file = `${group}-${i + 1}.xml`;
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${slice
-  .map(
-    (page) => `  <url>
-    <loc>${page.canonicalUrl}</loc>
-    <lastmod>${page.lastContentChangeAt ?? page.updatedAt}</lastmod>
-  </url>`,
-  )
-  .join("\n")}
-</urlset>
-`;
-    writeFileSync(join(outDir, file), xml);
-    files.push({ group, count: slice.length, file });
-  }
+const indexXml = renderSitemapIndexXml();
+assertValidSitemapIndex(indexXml);
+writeFileSync(join(outDir, "sitemap.xml"), indexXml);
+
+const files: Array<{ id: string; count: number; file: string }> = [];
+
+for (const { id } of listSitemapShardKeys()) {
+  const entries = resolveShardEntries(id);
+  const xml = renderSitemapShardXml(id);
+  assertValidUrlSet(xml, id);
+  const file = `${id}.xml`;
+  writeFileSync(join(outDir, file), xml);
+  files.push({ id, count: entries.length, file });
 }
 
 const summary = {
   generatedAt: new Date().toISOString(),
-  indexableUrls: pages.length,
+  policy: "high-intent-only",
+  highIntentUrls: countHighIntentSitemapUrls(),
+  shardCount: files.length,
   files,
 };
 
-writeFileSync(join(process.cwd(), "reports/sitemap-summary.json"), JSON.stringify(summary, null, 2));
+writeFileSync(
+  join(process.cwd(), "reports/sitemap-summary.json"),
+  JSON.stringify(summary, null, 2),
+);
 console.log(JSON.stringify(summary, null, 2));

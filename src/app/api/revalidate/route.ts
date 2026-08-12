@@ -13,10 +13,14 @@ export async function POST(request: Request) {
 
   resetPageRegistryCache();
   revalidatePath("/", "layout");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/sitemap/[id]", "page");
 
   return NextResponse.json({
     ok: true,
     revalidated: true,
+    sitemaps: true,
+    policy: "high-intent-only",
     timestamp: new Date().toISOString(),
   });
 }

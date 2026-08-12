@@ -1,19 +1,27 @@
 "use client";
 
 import { submitContactAction, type ActionState } from "@/app/actions/contact";
-import { getLocations, getServices } from "@/lib/data/repositories";
 import { PROPERTY_TYPES } from "@/data/property-types";
 import { useActionState } from "react";
 
 const initialState: ActionState = { ok: false, message: "" };
 
-export function QuoteForm() {
+export type QuoteFormOption = { id: string; name: string };
+
+export function QuoteForm({
+  services,
+  locations,
+}: {
+  services: QuoteFormOption[];
+  locations: QuoteFormOption[];
+}) {
   const [state, action, pending] = useActionState(submitContactAction, initialState);
-  const services = getServices({ publishedOnly: true });
-  const locations = getLocations({ publishedOnly: true, servedOnly: true });
 
   return (
-    <form action={action} className="space-y-4 rounded-[1.5rem] border border-brand-100 bg-white/90 p-5 shadow-soft sm:p-6">
+    <form
+      action={action}
+      className="space-y-4 rounded-[1.5rem] border border-brand-100 bg-white/90 p-5 shadow-soft sm:p-6"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Name" name="name" required error={state.errors?.name?.[0]} />
         <Field label="Phone" name="phone" required error={state.errors?.phone?.[0]} />
@@ -109,7 +117,7 @@ export function QuoteForm() {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-cta-600 px-5 font-semibold text-white hover:bg-cta-700 disabled:opacity-60"
+        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand-800 px-5 font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
       >
         {pending ? "Sending..." : "Submit enquiry"}
       </button>

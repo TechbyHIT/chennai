@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { BLUR_DATA_URL } from "@/lib/media/blur-placeholder";
+import { SafeImage } from "@/components/media/SafeImage";
 import { altFromPath } from "@/lib/media/catalog";
 
 type Props = {
@@ -20,7 +19,7 @@ export function ImageGallery({
   images,
   title,
   columns = "3",
-  priorityCount = 1,
+  priorityCount = 0,
   className = "",
 }: Props) {
   if (!images.length) return null;
@@ -36,15 +35,14 @@ export function ImageGallery({
             key={`${src}-${index}`}
             className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-brand-100"
           >
-            <Image
+            <SafeImage
               src={src}
               alt={altFromPath(src, index)}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover transition duration-500 group-hover:scale-[1.03]"
               priority={index < priorityCount}
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
+              loading={index < priorityCount ? "eager" : "lazy"}
             />
           </figure>
         ))}

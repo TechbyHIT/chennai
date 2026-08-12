@@ -1,17 +1,16 @@
-"use client";
+﻿"use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
+import { SafeImage } from "@/components/media/SafeImage";
 import { InstantSearch } from "@/components/search/InstantSearch";
 import { Button } from "@/components/ui/Button";
 import { BUSINESS_CONFIG } from "@/config/business";
-import { BLUR_DATA_URL } from "@/lib/media/blur-placeholder";
 
 const TRUST = [
-  "Measurement-led installation",
-  "SS316 / SS304 discussed openly",
   "Free site inspection",
-  "Tamil Nadu wide coverage",
+  "Measured, written quotes",
+  "SS316 / SS304 discussed openly",
+  "Serving customers across Tamil Nadu",
 ];
 
 export type HomeHeroStats = {
@@ -30,39 +29,25 @@ export function HomeHero({
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative min-h-[92svh] overflow-hidden">
-      <Image
+    <section className="relative min-h-[88svh] overflow-hidden sm:min-h-[92svh]">
+      <SafeImage
         src={heroSrc}
-        alt={`${BUSINESS_CONFIG.name} invisible grill installation in Tamil Nadu`}
+        alt={`${BUSINESS_CONFIG.name} premium invisible grill installation in Tamil Nadu`}
         fill
         priority
         sizes="100vw"
         className="object-cover"
-        placeholder="blur"
-        blurDataURL={BLUR_DATA_URL}
       />
       <div
-        className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/75 to-brand-600/40"
+        className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/80 to-brand-600/35"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-900/80 to-transparent"
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-900/85 to-transparent"
         aria-hidden="true"
       />
-      {!reduceMotion ? (
-        <>
-          <div
-            className="pointer-events-none absolute -left-16 top-24 h-56 w-56 rounded-full bg-cta-500/20 blur-3xl"
-            aria-hidden="true"
-          />
-          <div
-            className="pointer-events-none absolute bottom-10 right-10 h-64 w-64 rounded-full bg-brand-500/25 blur-3xl"
-            aria-hidden="true"
-          />
-        </>
-      ) : null}
 
-      <div className="relative mx-auto flex min-h-[92svh] w-full max-w-7xl flex-col justify-end px-4 pb-16 pt-28 sm:px-6 sm:pb-20 lg:px-8">
+      <div className="relative mx-auto flex min-h-[88svh] w-full max-w-7xl flex-col justify-end px-4 pb-16 pt-28 sm:min-h-[92svh] sm:px-6 sm:pb-20 lg:px-8">
         <motion.div
           className="max-w-3xl space-y-6 text-white"
           initial={reduceMotion ? false : { opacity: 0, y: 28 }}
@@ -73,18 +58,16 @@ export function HomeHero({
             {BUSINESS_CONFIG.name} · Tamil Nadu
           </p>
           <h1 className="text-hero font-display font-extrabold leading-[1.05] text-white">
-            Invisible Grills &{" "}
-            <span className="text-cta-500">Safety Nets</span> Installation in
-            Tamil Nadu
+            Premium Invisible Grills
+            <span className="mt-2 block text-cta-500">Across Tamil Nadu</span>
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-white/90 sm:text-xl">
-            Balcony invisible grills, safety nets, bird netting, mosquito mesh
-            and child-safe systems for apartments, villas and high-rises —
-            measured on site, quoted in writing, installed with care.
+            Elegant safety solutions for balconies, windows, apartments, villas and modern
+            homes — measured on site, quoted in writing, finished with care.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button href="/contact/" size="lg">
-              Book free inspection
+            <Button href="/#contact" size="lg">
+              Get Free Quote
             </Button>
             <Button
               href={`tel:${BUSINESS_CONFIG.phone.raw}`}
@@ -93,7 +76,15 @@ export function HomeHero({
               className="border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
               external
             >
-              Call {BUSINESS_CONFIG.phone.display}
+              Call Now
+            </Button>
+            <Button
+              href={`https://wa.me/${BUSINESS_CONFIG.whatsapp.raw}`}
+              variant="whatsapp"
+              size="lg"
+              external
+            >
+              WhatsApp
             </Button>
           </div>
         </motion.div>
@@ -124,10 +115,10 @@ export function HomeHero({
 
         <div className="mt-10 grid gap-3 sm:grid-cols-3">
           {[
-            { label: "Services", value: `${stats.services} installation systems` },
-            { label: "Cities served", value: `${stats.cities} Tamil Nadu cities` },
+            { label: "Installation systems", value: `${stats.services} services` },
+            { label: "Cities covered", value: `${stats.cities} Tamil Nadu cities` },
             {
-              label: "Local coverage",
+              label: "Local pages",
               value: `${stats.localities.toLocaleString("en-IN")}+ localities`,
             },
           ].map((card) => (

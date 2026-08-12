@@ -1,13 +1,22 @@
+import { SITEMAP_CONFIG } from "@/config/sitemap";
 import { SITE_CONFIG } from "@/config/site";
+import { CHENNAI_PRIORITY_AREA_SLUGS } from "@/data/chennai-priority-areas";
+import { COIMBATORE_PRIORITY_AREA_SLUGS } from "@/data/coimbatore-priority-areas";
+import { STATIC_CORE_PATHS } from "@/lib/pages/static-core-paths";
+import { getIndexablePages } from "@/lib/pages/page-registry";
 import {
-  countPublishedServedAreas,
+  getAreaBySlug,
+  getLocations,
   getServices,
 } from "@/lib/data/repositories";
-import { STATIC_CORE_PATHS } from "@/lib/pages/static-core-paths";
+import { isPageIndexable } from "@/lib/seo/is-page-indexable";
+import { createServiceAreaPage } from "@/lib/pages/create-page-record";
 import {
-  getIndexablePages,
-  iterateServiceAreaUrls,
-} from "@/lib/pages/page-registry";
+  dedupeSitemapEntries,
+  normalizeSitemapEntry,
+  type SitemapUrlEntry,
+} from "@/lib/sitemap/xml";
+import { sitemapShardUrl, toAbsoluteHttpsUrl } from "@/lib/sitemap/absolute-url";
 import type { PageRecord } from "@/types/page";
 
 export type SitemapShardId =
@@ -15,20 +24,20 @@ export type SitemapShardId =
   | "services"
   | "locations"
   | "service-locations"
-  | "service-areas"
+  | "priority-areas"
   | "blog"
-  | "guides"
-  | "images";
+  | "guides";
 
 export const SITEMAP_SHARD_IDS: SitemapShardId[] = [
   "core",
   "services",
   "locations",
   "service-locations",
-  "service-areas",
+  ...(SITEMAP_CONFIG.includePriorityServiceAreas
+    ? (["priority-areas"] as const)
+    : []),
   "blog",
   "guides",
-  "images",
 ];
 
 function chunk<T>(items: T[], size: number): T[][] {
@@ -39,32 +48,79 @@ function chunk<T>(items: T[], size: number): T[][] {
   return out;
 }
 
-function coreIndexable(): PageRecord[] {
-  return getIndexablePages();
+function highIntentIndexable(): PageRecord[] {
+  const allowed = new Set<string>(SITEMAP_CONFIG.highIntentPageTypes);
+  return getIndexablePages().filter((page) => allowed.has(page.pageType));
 }
 
-function countServiceAreaUrlsFast(): number {
-  const services = getServices({ publishedOnly: true }).length;
-  return services * countPublishedServedAreas();
+function contentLastmod(page: PageRecord): Date {
+  const raw = page.lastContentChangeAt ?? page.updatedAt ?? page.publishedAt;
+  if (!raw) return new Date();
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? new Date() : d;
+}
+
+function pageToEntry(page: PageRecord): SitemapUrlEntry {
+  return normalizeSitemapEntry({
+    url: page.canonicalUrl || `${SITE_CONFIG.url}${page.path}`,
+    lastModified: contentLastmod(page),
+    changeFrequency: "weekly",
+    priority:
+      page.crawlPriority === "critical"
+        ? 1
+        : page.crawlPriority === "high"
+          ? 0.8
+          : page.crawlPriority === "medium"
+            ? 0.6
+            : 0.4,
+    images: page.openGraphImage
+      ? [toAbsoluteHttpsUrl(page.openGraphImage)]
+      : undefined,
+  });
+}
+
+/** Priority Chennai + Coimbatore service×area landings only. */
+export function getPriorityServiceAreaPages(): PageRecord[] {
+  if (!SITEMAP_CONFIG.includePriorityServiceAreas) return [];
+
+  const services = getServices({ publishedOnly: true });
+  const cities = getLocations({ publishedOnly: true, servedOnly: true }).filter(
+    (city) => city.slug === "chennai" || city.slug === "coimbatore",
+  );
+
+  const pages: PageRecord[] = [];
+  for (const city of cities) {
+    const slugs =
+      city.slug === "chennai"
+        ? CHENNAI_PRIORITY_AREA_SLUGS
+        : COIMBATORE_PRIORITY_AREA_SLUGS;
+
+    for (const areaSlug of slugs) {
+      const area = getAreaBySlug(city.slug, areaSlug);
+      if (!area || area.publicationStatus !== "published") continue;
+
+      for (const service of services) {
+        const page = createServiceAreaPage(service, city, area);
+        if (isPageIndexable(page)) pages.push(page);
+      }
+    }
+  }
+  return pages;
 }
 
 export function getPagesForShard(shard: SitemapShardId): PageRecord[] {
-  const pages = coreIndexable();
+  const pages = highIntentIndexable();
   switch (shard) {
     case "core":
-      return pages.filter((page) =>
-        ["home", "about", "contact", "core"].includes(page.pageType),
-      );
+      return [];
     case "services":
       return pages.filter((page) => page.pageType === "service");
     case "locations":
-      return pages.filter(
-        (page) => page.pageType === "location" || page.pageType === "area",
-      );
+      return pages.filter((page) => page.pageType === "location");
     case "service-locations":
       return pages.filter((page) => page.pageType === "service-location");
-    case "service-areas":
-      return [];
+    case "priority-areas":
+      return getPriorityServiceAreaPages();
     case "blog":
       return pages.filter((page) => page.pageType === "blog");
     case "guides":
@@ -74,10 +130,6 @@ export function getPagesForShard(shard: SitemapShardId): PageRecord[] {
           page.pageType === "solution" ||
           page.pageType === "property-type-service",
       );
-    case "images":
-      return pages.filter(
-        (page) => Boolean(page.openGraphImage) && page.openGraphImage.length > 0,
-      );
     default:
       return [];
   }
@@ -85,17 +137,11 @@ export function getPagesForShard(shard: SitemapShardId): PageRecord[] {
 
 export function listSitemapShardKeys(): Array<{ id: string }> {
   const keys: Array<{ id: string }> = [];
-  const max = SITE_CONFIG.maxSitemapUrlsPerFile;
+  const max = SITEMAP_CONFIG.maxUrlsPerFile;
 
   for (const shard of SITEMAP_SHARD_IDS) {
     if (shard === "core") {
       keys.push({ id: "core" });
-      continue;
-    }
-    if (shard === "service-areas") {
-      const total = countServiceAreaUrlsFast();
-      const groups = Math.max(1, Math.ceil(total / max));
-      for (let i = 0; i < groups; i += 1) keys.push({ id: `${shard}-${i}` });
       continue;
     }
     const pages = getPagesForShard(shard);
@@ -109,86 +155,49 @@ export function listSitemapShardKeys(): Array<{ id: string }> {
   return keys;
 }
 
-export function resolveShardEntries(shardKey: string): Array<{
-  url: string;
-  lastModified: Date;
-  changeFrequency: "daily" | "weekly" | "monthly";
-  priority: number;
-  images?: string[];
-}> {
-  const now = new Date();
+export function resolveShardEntries(shardKey: string): SitemapUrlEntry[] {
+  const key = shardKey.replace(/\.xml$/i, "");
+  const revision = new Date(SITE_CONFIG.contentRevision);
 
-  if (shardKey === "core") {
-    return STATIC_CORE_PATHS.map((path) => ({
-      url: `${SITE_CONFIG.url}${path}`,
-      lastModified: now,
-      changeFrequency: path === "/" ? ("daily" as const) : ("monthly" as const),
-      priority: path === "/" ? 1 : 0.7,
-    }));
+  if (key === "core") {
+    return dedupeSitemapEntries(
+      STATIC_CORE_PATHS.map((path) =>
+        normalizeSitemapEntry({
+          url: toAbsoluteHttpsUrl(path),
+          lastModified: revision,
+          changeFrequency: path === "/" ? "daily" : "monthly",
+          priority: path === "/" ? 1 : 0.7,
+        }),
+      ),
+    );
   }
 
-  const match = shardKey.match(/^(.*)-(\d+)$/);
+  const match = key.match(/^(.*)-(\d+)$/);
   if (!match) return [];
   const shard = match[1] as SitemapShardId;
   const index = Number(match[2]);
   if (!SITEMAP_SHARD_IDS.includes(shard)) return [];
 
-  if (shard === "service-areas") {
-    const max = SITE_CONFIG.maxSitemapUrlsPerFile;
-    const start = index * max;
-    const end = start + max;
-    const entries: Array<{
-      url: string;
-      lastModified: Date;
-      changeFrequency: "weekly";
-      priority: number;
-    }> = [];
-    let i = 0;
-    for (const item of iterateServiceAreaUrls()) {
-      if (i >= end) break;
-      if (i >= start) {
-        entries.push({
-          url: `${SITE_CONFIG.url}${item.urlPath}`,
-          lastModified: now,
-          changeFrequency: "weekly",
-          priority: item.priority === "high" ? 0.8 : 0.6,
-        });
-      }
-      i += 1;
-    }
-    return entries;
-  }
-
   const pages = getPagesForShard(shard);
-  const groups = chunk(pages, SITE_CONFIG.maxSitemapUrlsPerFile);
+  const groups = chunk(pages, SITEMAP_CONFIG.maxUrlsPerFile);
   const group = groups[index] ?? [];
-
-  return group.map((page) => {
-    const lastModified = page.lastContentChangeAt
-      ? new Date(page.lastContentChangeAt)
-      : page.updatedAt
-        ? new Date(page.updatedAt)
-        : now;
-
-    const base = {
-      url: `${SITE_CONFIG.url}${page.path}`,
-      lastModified,
-      changeFrequency: "weekly" as const,
-      priority:
-        page.crawlPriority === "critical"
-          ? 1
-          : page.crawlPriority === "high"
-            ? 0.8
-            : 0.6,
-    };
-
-    if (shard === "images") {
-      return { ...base, images: [absoluteImageUrl(page.openGraphImage)] };
-    }
-    return base;
-  });
+  return dedupeSitemapEntries(group.map(pageToEntry));
 }
 
-function absoluteImageUrl(src: string): string {
-  return /^https?:\/\//.test(src) ? src : `${SITE_CONFIG.url}${src}`;
+export function buildSitemapIndexEntries(): Array<{ loc: string; lastmod: string }> {
+  const lastmod = SITE_CONFIG.contentRevision;
+  return listSitemapShardKeys().map(({ id }) => ({
+    loc: sitemapShardUrl(id),
+    lastmod,
+  }));
+}
+
+/** Total high-intent URLs currently eligible for sitemaps. */
+export function countHighIntentSitemapUrls(): number {
+  let total = STATIC_CORE_PATHS.length;
+  for (const shard of SITEMAP_SHARD_IDS) {
+    if (shard === "core") continue;
+    total += getPagesForShard(shard).length;
+  }
+  return total;
 }

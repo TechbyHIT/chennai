@@ -6,9 +6,9 @@ const variants = {
   primary:
     "bg-cta-500 text-brand-900 hover:bg-cta-600 btn-magnetic shadow-sm",
   secondary:
-    "bg-brand-600 text-white hover:bg-brand-500 shadow-sm",
+    "bg-brand-800 text-white hover:bg-brand-700 shadow-sm",
   outline:
-    "border border-brand-100 bg-white text-brand-800 hover:border-brand-500 hover:text-brand-500",
+    "border border-brand-100 bg-white text-brand-800 hover:border-cta-500 hover:text-brand-800",
   ghost: "text-brand-800 hover:bg-brand-50",
   whatsapp:
     "bg-success-500 text-white hover:brightness-110 shadow-sm",

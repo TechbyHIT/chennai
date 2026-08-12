@@ -39,7 +39,7 @@ export function MobileMenu() {
           />
           <div
             id="mobile-menu"
-            className="absolute right-0 top-0 flex h-full w-[min(26rem,94vw)] flex-col gap-4 overflow-y-auto bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] shadow-soft pt-[calc(1.25rem+env(safe-area-inset-top,0px))]"
+            className="absolute right-0 top-0 flex h-full w-[min(26rem,94vw)] flex-col gap-4 overflow-y-auto bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] pt-[calc(1.25rem+env(safe-area-inset-top,0px))] shadow-soft"
           >
             <div className="flex items-center justify-between">
               <p className="font-display text-lg font-bold text-brand-900">
@@ -57,7 +57,7 @@ export function MobileMenu() {
             <nav aria-label="Mobile">
               <ul className="space-y-1">
                 {PRIMARY_NAV.map((item) => (
-                  <li key={item.href}>
+                  <li key={`${item.label}-${item.href}`}>
                     <Link
                       href={item.href}
                       className="block rounded-xl px-3 py-3 font-semibold text-brand-900 hover:bg-brand-50"
@@ -67,6 +67,15 @@ export function MobileMenu() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link
+                    href="/faq/"
+                    className="block rounded-xl px-3 py-3 font-semibold text-brand-900 hover:bg-brand-50"
+                    onClick={() => setOpen(false)}
+                  >
+                    FAQs
+                  </Link>
+                </li>
               </ul>
             </nav>
 
@@ -142,9 +151,16 @@ export function MobileMenu() {
             </div>
 
             <div className="mt-auto grid gap-2">
+              <Link
+                href="/#contact"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand-800 font-semibold text-white"
+                onClick={() => setOpen(false)}
+              >
+                Get Free Quote
+              </Link>
               <a
                 href={`tel:${BUSINESS_CONFIG.phone.raw}`}
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-cta-500 font-semibold text-brand-900"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-cta-500 font-semibold text-brand-800"
               >
                 Call Now
               </a>
@@ -155,13 +171,6 @@ export function MobileMenu() {
               >
                 WhatsApp
               </a>
-              <Link
-                href="/contact/"
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand-900 font-semibold text-white"
-                onClick={() => setOpen(false)}
-              >
-                Get Quote
-              </Link>
             </div>
           </div>
         </div>

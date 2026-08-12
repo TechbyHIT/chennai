@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
@@ -7,12 +9,26 @@ const nextConfig: NextConfig = {
   // Keep URL shape consistent with SITE_CONFIG.trailingSlash and all route builders.
   trailingSlash: true,
   compress: true,
+  // Browser source maps off by default; keep explicit for lean prod disks.
+  productionBrowserSourceMaps: false,
+  // Optional DB/Redis stay external to the server bundle graph.
   serverExternalPackages: ["ioredis", "pg", "drizzle-orm"],
+  compiler: {
+    // Drop console.* in production client/server bundles (keep error/warn for ops).
+    removeConsole: isProd ? { exclude: ["error", "warn"] } : false,
+  },
+  experimental: {
+    // Tree-shake heavy barrels → smaller client chunks, less RAM at runtime.
+    optimizePackageImports: ["framer-motion", "zod"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
-    deviceSizes: [320, 360, 375, 390, 412, 640, 768, 1024, 1280, 1440],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    // Leaner variant set = less image-optimizer cache on a 50-site SSD.
+    deviceSizes: [360, 640, 768, 1024, 1280],
+    imageSizes: [32, 64, 128, 256],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "inline",
   },
   async headers() {
     return [
@@ -40,8 +56,6 @@ const nextConfig: NextConfig = {
               "form-action 'self'",
             ].join("; "),
           },
-          // Enable only after the live site is fully HTTPS on gloryinvisiblegrills.in.
-          // Hosting can override; this is a safe default for production HTTPS.
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
@@ -68,6 +82,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=86400, stale-while-revalidate=43200",
+          },
+        ],
+      },
+      {
+        source: "/sitemap/:path*",
         headers: [
           {
             key: "Cache-Control",

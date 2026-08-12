@@ -21,11 +21,12 @@ export function InstantSearch() {
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
+    if (!open || popular.length > 0) return;
     fetch("/api/search?mode=popular")
       .then((res) => res.json())
       .then((data: { results?: SearchHit[] }) => setPopular(data.results ?? []))
       .catch(() => undefined);
-  }, []);
+  }, [open, popular.length]);
 
   useEffect(() => {
     if (deferred.trim().length < 2) {

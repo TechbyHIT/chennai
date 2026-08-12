@@ -19,16 +19,24 @@ export function getServiceMedia(serviceSlug: string): {
   hero: string;
   gallery: string[];
 } {
-  return (
-    catalog.services[serviceSlug] ?? {
+  const media = catalog.services[serviceSlug];
+  if (!media) {
+    return {
       hero: "/images/hero-balcony.jpg",
       gallery: catalog.homepage.slice(0, 8),
-    }
-  );
+    };
+  }
+  return {
+    hero: media.hero || "/images/hero-balcony.jpg",
+    gallery: media.gallery.length ? media.gallery : catalog.homepage.slice(0, 8),
+  };
 }
 
 export function getHomepageGallery(limit = 12): string[] {
-  return catalog.homepage.slice(0, limit);
+  const fallback = "/images/hero-balcony.jpg";
+  const list = catalog.homepage.filter(Boolean);
+  if (!list.length) return [fallback];
+  return list.slice(0, limit);
 }
 
 export function getSiteGallery(limit = 60): Array<{ src: string; alt: string }> {

@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { QuoteForm } from "@/components/forms/QuoteForm";
+import { QuoteFormLoader } from "@/components/forms/QuoteFormLoader";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -187,7 +187,7 @@ export function PremiumServiceLanding({ model }: { model: PremiumLandingModel })
               Fill the form below and our team will help schedule a free assessment for{" "}
               {model.placeLabel}.
             </p>
-            <QuoteForm />
+            <QuoteFormLoader />
           </section>
 
           <section id="pricing" className="fg-section">
@@ -427,7 +427,7 @@ export function PremiumServiceLanding({ model }: { model: PremiumLandingModel })
             <p className="fg-muted">
               Fill the form below and connect with our experts for free assessment.
             </p>
-            <QuoteForm />
+            <QuoteFormLoader />
           </section>
         </div>
 

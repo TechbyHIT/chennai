@@ -31,7 +31,7 @@ export const BUSINESS_CONFIG = {
     longitude: null as number | null,
   },
 
-  logo: "/images/logo.jpg",
+  logo: "/images/logo.png",
   defaultOpenGraphImage: "/images/open-graph.jpg",
 
   serviceArea: {

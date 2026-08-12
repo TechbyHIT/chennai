@@ -30,8 +30,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0f172a" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+    { media: "(prefers-color-scheme: light)", color: "#0A1D37" },
+    { media: "(prefers-color-scheme: dark)", color: "#061224" },
   ],
 };
 
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en-IN" data-brand="glory" className={`${inter.variable} ${poppins.variable}`}>
       <body className="fg-mobile-shell">
         <a
           href="#main-content"

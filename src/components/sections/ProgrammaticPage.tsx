@@ -5,7 +5,7 @@ import { ContentModules } from "@/components/sections/ContentModules";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { InternalLinksList } from "@/components/sections/InternalLinksList";
-import { QuoteForm } from "@/components/forms/QuoteForm";
+import { QuoteFormLoader } from "@/components/forms/QuoteFormLoader";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
@@ -153,7 +153,7 @@ export function ProgrammaticPage({
                   </p>
                 </header>
               </div>
-              <QuoteForm />
+              <QuoteFormLoader />
             </div>
           </section>
         </div>
