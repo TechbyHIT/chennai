@@ -165,9 +165,10 @@ export default function HomePage() {
   const locations = getLocations({ publishedOnly: true, servedOnly: true });
   const localityCount = countPublishedServedAreas();
   const gallery = HOMEPAGE_PROJECT_IMAGES;
-  const aboutSecondary = gallery[1] ?? gallery[0];
-  const featuredInvisibleImage = gallery[10] ?? gallery[0];
-  const featuredSafetyImage = gallery[8] ?? gallery[2];
+  const fallbackHero = "/images/hero-balcony.jpg";
+  const aboutSecondary = gallery[1] ?? gallery[0] ?? fallbackHero;
+  const featuredInvisibleImage = gallery[10] ?? gallery[0] ?? fallbackHero;
+  const featuredSafetyImage = gallery[8] ?? gallery[2] ?? fallbackHero;
 
   const invisible =
     services.find((s) => s.slug === "invisible-grills") ?? services[0];
@@ -199,7 +200,7 @@ export default function HomePage() {
       />
 
       <HomeHero
-        heroSrc={gallery[0] ?? "/images/hero-balcony.jpg"}
+        heroSrc={gallery[0] ?? fallbackHero}
         stats={{
           services: services.length,
           cities: locations.length,
@@ -208,7 +209,7 @@ export default function HomePage() {
       />
 
       <AboutIntro
-        imageSrc={gallery[0] ?? "/images/hero-balcony.jpg"}
+        imageSrc={gallery[0] ?? fallbackHero}
         secondarySrc={aboutSecondary}
       />
 

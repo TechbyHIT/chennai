@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Avoid picking /var/www/package-lock.json when multiple sites share a parent folder.
+  outputFileTracingRoot: path.join(__dirname),
   reactStrictMode: true,
   poweredByHeader: false,
   // Keep URL shape consistent with SITE_CONFIG.trailingSlash and all route builders.
