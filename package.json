@@ -7,8 +7,10 @@
   },
   "scripts": {
     "dev": "next dev -p 3009",
-    "build": "next build",
+    "prebuild": "node scripts/ensure-next.js",
+    "build": "node node_modules/next/dist/bin/next build",
     "postbuild": "node scripts/prepare-standalone.js",
+    "vps:deploy": "bash scripts/vps-deploy.sh",
     "start": "next start -p 3009",
     "start:standalone": "node .next/standalone/server.js",
     "deploy:pack": "node scripts/pack-production.js",
