@@ -41,7 +41,7 @@ module.exports = {
       log_date_format: "YYYY-MM-DD HH:mm:ssZ",
       env: {
         NODE_ENV: "production",
-        PORT: 3007,
+        PORT: 3009,
         HOSTNAME: "127.0.0.1",
         NEXT_TELEMETRY_DISABLED: "1",
         // Keep V8 heap modest so 50 sites fit in RAM.

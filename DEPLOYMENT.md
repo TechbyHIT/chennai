@@ -31,7 +31,7 @@ pm2 reload glory-invisible-grills
 
 Do **not** copy: `src/`, tests, docs, `.git`, full `node_modules`, `.next/cache`.
 
-App listens on **127.0.0.1:3007**. Nginx: `nginx/pm2-site.conf` + global `nginx/nginx.conf`.
+App listens on **127.0.0.1:3009**. Nginx: `nginx/pm2-site.conf` + global `nginx/nginx.conf`.
 
 ## PM2 logrotate (once per server)
 
@@ -56,7 +56,7 @@ Never delete `.next/standalone` or `dist/production` while the site is live.
 
 ## Environment
 
-- `PORT=3007` (ecosystem)
+- `PORT=3009` (ecosystem)
 - `NEXT_PUBLIC_SITE_URL=https://gloryinvisiblegrills.in`
 - `DATA_SOURCE=file` (default; skip Postgres/Redis for lowest RAM)
 - `DATABASE_URL` / `REDIS_URL` only if `DATA_SOURCE=db`
@@ -70,7 +70,7 @@ Multi-stage `Dockerfile` ships standalone only. Prefer PM2 packs on multi-site h
 ## Health
 
 ```bash
-curl -I http://127.0.0.1:3007/
+curl -I http://127.0.0.1:3009/
 curl -sI https://gloryinvisiblegrills.in/sitemap.xml
 pm2 status
 pm2 logs glory-invisible-grills --lines 50

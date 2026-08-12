@@ -18,9 +18,9 @@ npm run media:sync
 npm run dev
 ```
 
-Open [http://localhost:3007](http://localhost:3007).
+Open [http://localhost:3009](http://localhost:3009).
 
-## Production (PM2 + standalone, port 3007)
+## Production (PM2 + standalone, port 3009)
 
 ```bash
 npm ci
@@ -30,7 +30,7 @@ npm run build
 pm2 start ecosystem.config.cjs
 ```
 
-Nginx proxies to `127.0.0.1:3007`. See `DEPLOYMENT.md` and `nginx/pm2-site.conf`.
+Nginx proxies to `127.0.0.1:3009`. See `DEPLOYMENT.md` and `nginx/pm2-site.conf`.
 
 ## Optional local Docker (Postgres/Redis only)
 
