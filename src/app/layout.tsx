@@ -67,7 +67,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: true,
     address: true,
-    email: true,
+    email: false,
   },
   category: "Home Safety Installation",
   verification: {

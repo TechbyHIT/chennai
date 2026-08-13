@@ -27,7 +27,7 @@ export function Footer() {
     allServices.find((service) => service.slug === slug),
   ).filter((service): service is NonNullable<typeof service> => Boolean(service));
   const fallbackServices = services.length ? services : allServices.slice(0, 8);
-  const locations = getLocations({ publishedOnly: true, servedOnly: true }).slice(0, 12);
+  const locations = getLocations({ publishedOnly: true, servedOnly: true }).slice(0, 6);
 
   return (
     <footer className="relative bg-brand-900 text-white">
@@ -100,11 +100,21 @@ export function Footer() {
               </a>
             </p>
             <p>
-              <a href={`mailto:${BUSINESS_CONFIG.email}`} className="hover:text-cta-500">
-                {BUSINESS_CONFIG.email}
-              </a>
+              <Link href="/contact/" className="hover:text-cta-500">
+                Email us
+              </Link>
             </p>
             <p className="text-white/60">Hours: {BUSINESS_CONFIG.businessHours.display}</p>
+          </div>
+          <div className="flex flex-wrap gap-2 pt-2">
+            <a
+              href={BUSINESS_CONFIG.socialLinks.whatsapp}
+              className="inline-flex h-10 items-center rounded-full bg-[#25d366] px-3 text-sm font-semibold text-white hover:brightness-110"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              WhatsApp
+            </a>
           </div>
         </div>
 

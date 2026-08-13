@@ -24,7 +24,7 @@ export function MegaMenuPanel({
                   {column.title}
                 </Link>
                 <ul className="mt-3 space-y-1.5">
-                  {column.links.map((link) => (
+                  {column.links.slice(0, 8).map((link) => (
                     <li key={`${column.title}-${link.label}-${link.href}`}>
                       <Link
                         href={link.href}

@@ -50,12 +50,11 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+      className={`sticky top-0 z-50 w-full border-b pt-[var(--fg-safe-top)] transition-all duration-300 ${
         scrolled
           ? "border-brand-100 bg-white shadow-[0_10px_30px_rgba(10,29,55,0.08)]"
           : "border-brand-100/60 bg-white"
       }`}
-      style={{ paddingTop: "var(--fg-safe-top)" }}
     >
       {/* Top utility bar */}
       <div className="hidden bg-brand-800 text-white lg:block">
@@ -64,9 +63,6 @@ export function Header() {
             Premium Invisible Grills &amp; Safety Nets across Tamil Nadu
           </p>
           <div className="flex items-center gap-5">
-            <a href={`mailto:${BUSINESS_CONFIG.email}`} className="hover:text-cta-500">
-              {BUSINESS_CONFIG.email}
-            </a>
             <a
               href={`tel:${BUSINESS_CONFIG.phone.raw}`}
               className="flex items-center gap-1.5 font-semibold hover:text-cta-500"

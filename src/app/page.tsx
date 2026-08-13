@@ -28,8 +28,7 @@ import type { Metadata } from "next";
 
 export const revalidate = 86400;
 
-const HOME_TITLE =
-  "Invisible Grills & Safety Nets in Tamil Nadu | Glory Invisible Grills";
+const HOME_TITLE = "Invisible Grills & Safety Nets | Tamil Nadu";
 const HOME_DESCRIPTION =
   "Premium invisible grill and safety net installation across Tamil Nadu - balconies, windows, apartments and villas. Free site measurement, written estimates, honest material grades.";
 
@@ -222,11 +221,15 @@ export default function HomePage() {
             title="Complete safety solutions for homes and apartments"
             lead="Invisible grills, safety nets, bird protection and related systems - measured for Tamil Nadu homes."
           />
-          <ServiceCardsGrid services={services} images={gallery} />
+          <ServiceCardsGrid services={services} images={gallery} limit={9} />
           <p className="text-sm text-ink-500">
-            Showing all {services.length} published services. Need something specific?{" "}
+            Need a specific installation?{" "}
+            <Link href="/services/" className="font-semibold text-brand-500 hover:text-brand-600">
+              View all services
+            </Link>{" "}
+            or{" "}
             <Link href="/contact/" className="font-semibold text-brand-500 hover:text-brand-600">
-              Request a quote
+              request a quote
             </Link>
             .
           </p>
@@ -287,7 +290,7 @@ export default function HomePage() {
             title="A glimpse of our recent installations"
             lead="Real Glory project photography - invisible grills, safety nets, bird nets, sports nets and cloth hangers."
           />
-          <ImageGallery images={gallery} columns="4" priorityCount={1} />
+          <ImageGallery images={gallery.slice(0, 8)} columns="4" priorityCount={1} />
           <p className="text-sm text-ink-500">
             {gallery.length} project photos on this page.{" "}
             <Link
@@ -337,7 +340,7 @@ export default function HomePage() {
             href="/faq/"
             className="inline-flex text-sm font-semibold text-brand-500 hover:text-brand-600"
           >
-            More FAQs â†’
+            More FAQs →
           </Link>
         </Container>
       </Section>
@@ -365,7 +368,7 @@ export default function HomePage() {
                   aria-hidden="true"
                   className="text-cta-500 transition group-hover:translate-x-1"
                 >
-                  â†’
+                  →
                 </span>
               </Link>
             ))}
@@ -374,7 +377,7 @@ export default function HomePage() {
             href="/locations/"
             className="inline-flex text-sm font-semibold text-brand-500 hover:text-brand-600"
           >
-            Browse all service areas â†’
+            Browse all service areas →
           </Link>
         </Container>
       </Section>

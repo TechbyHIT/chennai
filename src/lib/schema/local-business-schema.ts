@@ -35,7 +35,6 @@ export function localBusinessSchema() {
     description: BUSINESS_CONFIG.description,
     url: BUSINESS_CONFIG.websiteUrl,
     telephone: BUSINESS_CONFIG.phone.raw,
-    email: BUSINESS_CONFIG.email,
     image: `${BUSINESS_CONFIG.websiteUrl}${BUSINESS_CONFIG.defaultOpenGraphImage}`,
     priceRange: "$$",
     areaServed: {

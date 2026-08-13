@@ -44,6 +44,7 @@ export const BUSINESS_CONFIG = {
     instagram: "[INSTAGRAM_URL]",
     facebook: "[FACEBOOK_URL]",
     youtube: "[YOUTUBE_URL]",
+    whatsapp: "https://wa.me/918870777330",
   },
 
   analytics: {

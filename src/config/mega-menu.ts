@@ -1,5 +1,3 @@
-import { INTENT_KEYWORD_MENU_COLUMNS } from "@/data/intent-keyword-expansion";
-
 export type MegaMenuColumn = {
   title: string;
   href: string;
@@ -215,50 +213,6 @@ export const SERVICES_MEGA_MENU: MegaMenuColumn[] = [
       { label: "Service Areas", href: "/locations/" },
     ],
   },
-  {
-    title: "High-Intent Searches",
-    href: "/services/",
-    links: [
-      { label: "Invisible Grills Near Me", href: "/invisible-grills-in-chennai/" },
-      { label: "Safety Nets Near Me", href: "/safety-nets-in-chennai/" },
-      { label: "Pigeon Nets Near Me", href: "/bird-nets-in-chennai/" },
-      { label: "Balcony Pigeon Nets", href: S.bird },
-      { label: "Balcony Bird Nets", href: S.bird },
-      { label: "Bird Net Installation", href: S.bird },
-      { label: "Pigeon Net Installation", href: S.bird },
-      { label: "Child Balcony Safety Nets", href: S.childNet },
-      { label: "Apartment Balcony Safety Nets", href: "/property-types/apartments/balcony-safety-nets/" },
-      { label: "Balcony Safety Mesh", href: S.balconyNet },
-      { label: "Balcony Protection Nets", href: S.balconyNet },
-      { label: "Anti Pigeon Nets", href: S.bird },
-      { label: "Bird Proof Balcony", href: "/solutions/pigeon-balcony-control/" },
-      { label: "Cat Balcony Nets", href: S.petNet },
-      { label: "Dog Balcony Nets", href: S.petNet },
-      { label: "Monkey Proof Nets", href: S.monkey },
-      { label: "Invisible Balcony Protection", href: S.balconyGrill },
-      { label: "Balcony Grill Safety", href: S.balconyGrill },
-      { label: "Stainless Steel Balcony Grills", href: S.balconyGrill },
-      { label: "Home Safety Solutions", href: "/solutions/" },
-      { label: "Balcony Fall Protection", href: "/solutions/child-balcony-safety/" },
-      { label: "High Rise Safety Nets", href: "/property-types/high-rise-apartments/safety-nets/" },
-      { label: "Terrace Bird Nets", href: S.bird },
-      { label: "Window Bird Nets", href: S.bird },
-      { label: "Duct Area Bird Nets", href: S.bird },
-      { label: "Construction Debris Nets", href: S.buildingNet },
-      { label: "Building Protection Nets", href: S.buildingNet },
-      { label: "Sports Ground Nets", href: S.sports },
-      { label: "Turf Cricket Nets", href: S.sports },
-      { label: "Swimming Pool Safety Nets", href: S.safety },
-      { label: "Shade Net Installation", href: S.sports },
-      { label: "Drying Cloth Hanger Systems", href: S.ceilingCloth },
-      { label: "Motorized Drying Systems", href: S.ceilingCloth },
-      { label: "Cricket Practice Nets", href: S.sports },
-      { label: "Cricket Box Nets", href: S.sports },
-      { label: "Cricket Cage Nets", href: S.sports },
-      { label: "Bird Mesh Installation", href: S.bird },
-    ],
-  },
-  ...INTENT_KEYWORD_MENU_COLUMNS,
 ];
 
 export const AREAS_MEGA_MENU: MegaMenuColumn[] = [

@@ -25,7 +25,6 @@ export function organizationSchema() {
     },
     image: `${BUSINESS_CONFIG.websiteUrl}${BUSINESS_CONFIG.defaultOpenGraphImage}`,
     description: BUSINESS_CONFIG.description,
-    email: BUSINESS_CONFIG.email,
     telephone: BUSINESS_CONFIG.phone.raw,
     knowsLanguage: ["en-IN", "ta-IN"],
     address: {

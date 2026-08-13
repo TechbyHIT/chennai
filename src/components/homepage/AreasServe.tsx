@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { buildLocationPath } from "@/config/routes";
-import { buildServiceInCityPath } from "@/lib/routing/service-location-urls";
 import type { Location } from "@/types/location";
 
 export function AreasServe({
@@ -14,7 +13,7 @@ export function AreasServe({
   localityCount: number;
 }) {
   const reduceMotion = useReducedMotion();
-  const cities = locations.slice(0, 12);
+  const cities = locations.slice(0, 8);
 
   return (
     <section className="section-space bg-brand-900 text-white">
@@ -49,20 +48,6 @@ export function AreasServe({
                 {city.introduction ||
                   `Invisible grills and safety nets for homes and apartments in ${city.name}.`}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Link
-                  href={buildServiceInCityPath("invisible-grills", city.slug)}
-                  className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white hover:border-cta-500 hover:text-cta-500"
-                >
-                  Invisible Grills
-                </Link>
-                <Link
-                  href={buildServiceInCityPath("safety-nets", city.slug)}
-                  className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white hover:border-cta-500 hover:text-cta-500"
-                >
-                  Safety Nets
-                </Link>
-              </div>
               <Link
                 href={buildLocationPath(city.slug)}
                 className="mt-4 inline-flex text-sm font-semibold text-cta-500 hover:text-cta-600"
@@ -73,23 +58,12 @@ export function AreasServe({
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          {locations.slice(0, 24).map((location) => (
-            <Link
-              key={`chip-${location.id}`}
-              href={buildLocationPath(location.slug)}
-              className="rounded-full border border-white/15 px-3.5 py-1.5 text-sm font-semibold text-white/85 transition hover:border-cta-500 hover:text-cta-500"
-            >
-              {location.name}
-            </Link>
-          ))}
-          <Link
-            href="/locations/"
-            className="rounded-full bg-cta-500 px-3.5 py-1.5 text-sm font-semibold text-brand-900 hover:bg-cta-600"
-          >
-            Service area directory →
-          </Link>
-        </div>
+        <Link
+          href="/locations/"
+          className="inline-flex rounded-full bg-cta-500 px-4 py-2 text-sm font-semibold text-brand-900 hover:bg-cta-600"
+        >
+          Service area directory →
+        </Link>
       </div>
     </section>
   );
