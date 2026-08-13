@@ -1,7 +1,7 @@
 /**
- * Sitemap inclusion policy — high commercial intent only.
- * Mass scaled locality × service URLs are generated on demand but NOT sitemapped
- * (crawl-budget protection). They remain reachable via internal links from city hubs.
+ * Sitemap inclusion — all curated commercial pages.
+ * Mass scaled locality × service URLs stay on-demand (not sitemapped)
+ * so crawl budget and XML size stay under 50k.
  */
 export const SITEMAP_CONFIG = {
   /** Absolute HTTPS base is enforced in serializers even if env is http. */
@@ -14,6 +14,7 @@ export const SITEMAP_CONFIG = {
   highIntentPageTypes: [
     "service",
     "location",
+    "area",
     "service-location",
     "guide",
     "solution",
@@ -22,8 +23,8 @@ export const SITEMAP_CONFIG = {
   ] as const,
 
   /**
-   * Include service×area URLs only for priority Chennai / Coimbatore localities
-   * (not the full scaled locality graph).
+   * Include service×area URLs for every curated (seed) locality,
+   * not only Chennai / Coimbatore priority lists.
    */
   includePriorityServiceAreas: true,
 

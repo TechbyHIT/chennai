@@ -6,7 +6,7 @@
  *   node scripts/post-deploy-clean.js
  *   node scripts/post-deploy-clean.js --aggressive   # also drops unused root caches
  */
-const { existsSync, rmSync, statSync, readdirSync } = require("node:fs");
+const { existsSync, mkdirSync, rmSync, statSync, readdirSync } = require("node:fs");
 const { join } = require("node:path");
 
 const root = process.cwd();
@@ -64,6 +64,8 @@ for (const rel of targets) {
     console.warn(`[post-deploy-clean] skip ${rel}:`, error.message);
   }
 }
+
+mkdirSync(join(root, ".next", "cache"), { recursive: true });
 
 console.log(
   JSON.stringify(

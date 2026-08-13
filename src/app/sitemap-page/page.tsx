@@ -86,8 +86,8 @@ function LinkGroup({
 
 export default function HtmlSitemapPage() {
   const services = getServices({ publishedOnly: true });
-  const locations = getLocations({ publishedOnly: true });
-  const servedCities = getLocations({ publishedOnly: true, servedOnly: true });
+  const locations = getLocations({ publishedOnly: true, servedOnly: true });
+  const servedCities = locations;
   const solutions = getProblems({ publishedOnly: true });
   const guides = getGuides({ publishedOnly: true });
   const posts = getBlogPosts({ publishedOnly: true });
@@ -113,6 +113,10 @@ export default function HtmlSitemapPage() {
   // Only property-type × service URLs exist as real pages.
   const propertyTypeLinks = getIndexablePages()
     .filter((page) => page.pageType === "property-type-service")
+    .map((page) => ({ label: page.h1, href: page.path }));
+
+  const areaLinks = getIndexablePages()
+    .filter((page) => page.pageType === "area")
     .map((page) => ({ label: page.h1, href: page.path }));
 
   return (
@@ -155,6 +159,9 @@ export default function HtmlSitemapPage() {
           <LinkGroup title="Main pages" links={CORE_LINKS} columns={4} />
           <LinkGroup title="Services" links={serviceLinks} columns={3} />
           <LinkGroup title="Cities & towns" links={cityLinks} columns={4} />
+          {areaLinks.length > 0 ? (
+            <LinkGroup title="Localities" links={areaLinks} columns={4} />
+          ) : null}
           <LinkGroup
             title="Services by city"
             links={serviceCityLinks}

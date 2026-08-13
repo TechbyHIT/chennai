@@ -1,6 +1,6 @@
 import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { buildBlogPath } from "@/config/routes";
-import { getBlogPostBySlug } from "@/lib/data/repositories";
+import { getBlogPostBySlug, getBlogPosts } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
 import { articleSchema } from "@/lib/schema/article-schema";
 import { generatePageMetadata } from "@/lib/seo/generate-page-metadata";
@@ -13,7 +13,9 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ postSlug: string }> };
 
 export async function generateStaticParams() {
-  return [];
+  return getBlogPosts({ publishedOnly: true }).map((post) => ({
+    postSlug: post.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

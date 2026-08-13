@@ -6,6 +6,8 @@ import { STATIC_CORE_PATHS } from "@/lib/pages/static-core-paths";
 import { getIndexablePages } from "@/lib/pages/page-registry";
 import {
   getAreaBySlug,
+  getAreas,
+  getLocationById,
   getLocations,
   getServices,
 } from "@/lib/data/repositories";
@@ -23,6 +25,7 @@ export type SitemapShardId =
   | "core"
   | "services"
   | "locations"
+  | "areas"
   | "service-locations"
   | "priority-areas"
   | "blog"
@@ -32,6 +35,7 @@ export const SITEMAP_SHARD_IDS: SitemapShardId[] = [
   "core",
   "services",
   "locations",
+  "areas",
   "service-locations",
   ...(SITEMAP_CONFIG.includePriorityServiceAreas
     ? (["priority-areas"] as const)
@@ -79,17 +83,38 @@ function pageToEntry(page: PageRecord): SitemapUrlEntry {
   });
 }
 
-/** Priority Chennai + Coimbatore service×area landings only. */
+/** Curated locality service×area landings (not the 9M scaled graph). */
 export function getPriorityServiceAreaPages(): PageRecord[] {
   if (!SITEMAP_CONFIG.includePriorityServiceAreas) return [];
 
   const services = getServices({ publishedOnly: true });
-  const cities = getLocations({ publishedOnly: true, servedOnly: true }).filter(
-    (city) => city.slug === "chennai" || city.slug === "coimbatore",
-  );
-
   const pages: PageRecord[] = [];
-  for (const city of cities) {
+
+  for (const area of getAreas({ publishedOnly: true, curatedOnly: true })) {
+    if (area.publicationStatus !== "published" || !area.isServed) continue;
+    const city = getLocationById(area.parentId);
+    if (
+      !city ||
+      !city.isServed ||
+      city.publicationStatus !== "published"
+    ) {
+      continue;
+    }
+
+    for (const service of services) {
+      const page = createServiceAreaPage(service, city, area);
+      if (isPageIndexable(page)) pages.push(page);
+    }
+  }
+
+  // Keep well-known Chennai / Coimbatore corridors even if a seed file
+  // omitted them from INITIAL_AREAS.
+  const extraCities = getLocations({
+    publishedOnly: true,
+    servedOnly: true,
+  }).filter((city) => city.slug === "chennai" || city.slug === "coimbatore");
+
+  for (const city of extraCities) {
     const slugs =
       city.slug === "chennai"
         ? CHENNAI_PRIORITY_AREA_SLUGS
@@ -98,13 +123,13 @@ export function getPriorityServiceAreaPages(): PageRecord[] {
     for (const areaSlug of slugs) {
       const area = getAreaBySlug(city.slug, areaSlug);
       if (!area || area.publicationStatus !== "published") continue;
-
       for (const service of services) {
         const page = createServiceAreaPage(service, city, area);
         if (isPageIndexable(page)) pages.push(page);
       }
     }
   }
+
   return pages;
 }
 
@@ -117,6 +142,8 @@ export function getPagesForShard(shard: SitemapShardId): PageRecord[] {
       return pages.filter((page) => page.pageType === "service");
     case "locations":
       return pages.filter((page) => page.pageType === "location");
+    case "areas":
+      return pages.filter((page) => page.pageType === "area");
     case "service-locations":
       return pages.filter((page) => page.pageType === "service-location");
     case "priority-areas":

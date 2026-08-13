@@ -1,6 +1,6 @@
 import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { buildGuidePath } from "@/config/routes";
-import { getGuideBySlug } from "@/lib/data/repositories";
+import { getGuideBySlug, getGuides } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
 import { articleSchema } from "@/lib/schema/article-schema";
 import { generatePageMetadata } from "@/lib/seo/generate-page-metadata";
@@ -13,7 +13,9 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ guideSlug: string }> };
 
 export async function generateStaticParams() {
-  return [];
+  return getGuides({ publishedOnly: true }).map((guide) => ({
+    guideSlug: guide.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

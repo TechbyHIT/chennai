@@ -1,9 +1,22 @@
+const PUBLIC_SITE_URL = "https://gloryinvisiblegrills.in";
+
+function publicWebsiteUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? PUBLIC_SITE_URL).replace(
+    /\/$/,
+    "",
+  );
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(raw)) {
+    return PUBLIC_SITE_URL;
+  }
+  return raw.replace(/^http:\/\//i, "https://");
+}
+
 export const BUSINESS_CONFIG = {
   name: "Glory Invisible Grills",
   legalName: "Glory Invisible Grills",
   description:
     "Professional invisible grill installation for balconies, windows and high-rise homes across Tamil Nadu. Safety-focused stainless steel solutions with careful measurement and neat finishing.",
-  websiteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://gloryinvisiblegrills.in",
+  websiteUrl: publicWebsiteUrl(),
 
   phone: {
     display: "+91 88707 77330",

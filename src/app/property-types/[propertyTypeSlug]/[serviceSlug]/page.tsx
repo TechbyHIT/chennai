@@ -2,7 +2,9 @@ import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { buildPropertyTypeServicePath } from "@/config/routes";
 import {
   getPropertyTypeBySlug,
+  getPropertyTypes,
   getServiceBySlug,
+  getServices,
 } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
 import { serviceSchema } from "@/lib/schema/service-schema";
@@ -16,7 +18,14 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ propertyTypeSlug: string; serviceSlug: string }> };
 
 export async function generateStaticParams() {
-  return [];
+  const propertyTypes = getPropertyTypes({ publishedOnly: true });
+  const services = getServices({ publishedOnly: true });
+  return propertyTypes.flatMap((propertyType) =>
+    services.map((service) => ({
+      propertyTypeSlug: propertyType.slug,
+      serviceSlug: service.slug,
+    })),
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

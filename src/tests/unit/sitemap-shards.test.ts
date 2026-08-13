@@ -8,10 +8,13 @@ import { renderCombinedSitemapXml, renderSitemapIndexXml, renderSitemapShardXml 
 import { validateSitemapIndexXml, validateUrlSetXml } from "@/lib/sitemap/xml";
 
 describe("high-intent sitemap shards", () => {
-  it("lists compact high-intent shards (no mass service-areas)", () => {
+  it("lists curated shards including areas (no mass scaled service-areas)", () => {
     const keys = listSitemapShardKeys().map((item) => item.id);
     expect(keys).toContain("core");
     expect(keys.some((id) => id.startsWith("service-locations-"))).toBe(true);
+    expect(keys.some((id) => id.startsWith("areas-"))).toBe(true);
+    expect(keys.some((id) => id.startsWith("priority-areas-"))).toBe(true);
+    expect(keys.some((id) => id.startsWith("blog-"))).toBe(true);
     expect(keys.some((id) => id.startsWith("service-areas-"))).toBe(false);
     expect(keys.length).toBeLessThan(30);
   });
@@ -24,9 +27,9 @@ describe("high-intent sitemap shards", () => {
     expect(entries.some((e) => e.loc.includes("/sitemap-page/"))).toBe(true);
   });
 
-  it("keeps total high-intent URLs well under crawl-budget blowups", () => {
+  it("keeps total sitemap URLs well under crawl-budget blowups", () => {
     const total = countHighIntentSitemapUrls();
-    expect(total).toBeGreaterThan(20);
+    expect(total).toBeGreaterThan(100);
     expect(total).toBeLessThan(20_000);
   });
 
@@ -37,12 +40,15 @@ describe("high-intent sitemap shards", () => {
     expect(validateUrlSetXml(coreXml)).toEqual([]);
   });
 
-  it("emits a combined urlset with real HTTPS locs for GSC", () => {
+  it("emits a combined urlset with live-site HTTPS locs for GSC", () => {
     const xml = renderCombinedSitemapXml();
     expect(validateUrlSetXml(xml)).toEqual([]);
     expect(xml).toContain("<urlset");
     expect(xml).not.toContain("<sitemapindex");
-    expect((xml.match(/<loc>/g) ?? []).length).toBeGreaterThan(20);
+    expect(xml).not.toMatch(/localhost|127\.0\.0\.1/i);
+    expect(xml).toContain("https://gloryinvisiblegrills.in/");
+    expect(xml).toContain("/blog/how-to-choose-balcony-safety-grills/");
+    expect((xml.match(/<loc>/g) ?? []).length).toBeGreaterThan(100);
   });
 
   it("does not list empty child shards", () => {

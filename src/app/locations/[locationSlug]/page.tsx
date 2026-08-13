@@ -4,7 +4,6 @@ import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { buildLocationPath } from "@/config/routes";
-import { STATIC_GENERATION, isSeedCity } from "@/config/static-generation";
 import {
   getAreas,
   getLocationBySlug,
@@ -22,12 +21,11 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ locationSlug: string }> };
 
 export async function generateStaticParams() {
-  if (STATIC_GENERATION.seedCitySlugs.length === 0) return [];
-  return getLocations({ publishedOnly: true, servedOnly: true })
-    .filter((location) => isSeedCity(location.slug))
-    .map((location) => ({
+  return getLocations({ publishedOnly: true, servedOnly: true }).map(
+    (location) => ({
       locationSlug: location.slug,
-    }));
+    }),
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

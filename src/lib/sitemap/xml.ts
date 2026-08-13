@@ -128,6 +128,10 @@ export function validateUrlSetXml(xml: string): string[] {
       errors.push(`Non-HTTPS loc: ${loc}`);
       break;
     }
+    if (/localhost|127\.0\.0\.1/i.test(loc)) {
+      errors.push(`Localhost loc: ${loc}`);
+      break;
+    }
   }
   const unique = new Set(locs);
   if (unique.size !== locs.length) {
@@ -147,6 +151,10 @@ export function validateSitemapIndexXml(xml: string): string[] {
   for (const loc of locs) {
     if (!loc.startsWith("https://")) {
       errors.push(`Non-HTTPS sitemap loc: ${loc}`);
+      break;
+    }
+    if (/localhost|127\.0\.0\.1/i.test(loc)) {
+      errors.push(`Localhost sitemap loc: ${loc}`);
       break;
     }
   }
