@@ -3,7 +3,7 @@ import {
   renderCombinedSitemapXml,
 } from "@/lib/sitemap/render";
 
-export const revalidate = 86400;
+export const revalidate = false;
 export const dynamic = "force-static";
 
 /**

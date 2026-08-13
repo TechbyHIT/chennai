@@ -5,7 +5,7 @@ import {
 import { listSitemapShardKeys } from "@/lib/sitemap/shards";
 import { notFound } from "next/navigation";
 
-export const revalidate = 86400;
+export const revalidate = false;
 export const dynamic = "force-static";
 
 type Props = { params: Promise<{ id: string }> };
