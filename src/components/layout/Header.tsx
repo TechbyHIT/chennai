@@ -81,9 +81,9 @@ export function Header() {
         />
       </div>
 
-      <div className="relative mx-auto flex min-h-[64px] max-w-7xl items-center justify-between gap-2 px-4 sm:min-h-[76px] sm:px-6 lg:min-h-[88px] lg:px-8">
+      <div className="relative mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-2 px-3 sm:min-h-[80px] sm:px-6 lg:min-h-[88px] lg:px-8">
         <div className="flex min-w-0 shrink items-center">
-          <Logo compact className="max-w-[min(100%,220px)] sm:max-w-[260px] lg:max-w-[320px]" />
+          <Logo compact className="max-w-[min(100%,240px)] sm:max-w-[280px] lg:max-w-[340px]" />
         </div>
 
         <nav

@@ -148,7 +148,7 @@
   --text-h2: clamp(1.75rem, 3vw, 2.625rem);
   --text-h3: clamp(1.25rem, 2vw, 1.75rem);
   --text-body: clamp(1rem, 1.2vw, 1.125rem);
-  --fg-mobile-cta-h: 4.25rem;
+  --fg-mobile-cta-h: 0px;
   --fg-safe-bottom: env(safe-area-inset-bottom, 0px);
   --fg-safe-top: env(safe-area-inset-top, 0px);
 }
@@ -1770,30 +1770,36 @@
     text-decoration: underline;
   }
 
-  /* Desktop-only floats — mobile uses sticky bottom bar */
+  /* Circular floating contact buttons (mobile + desktop) */
   .fg-float {
-    display: none;
+    position: fixed;
+    right: 0.85rem;
+    bottom: calc(1rem + var(--fg-safe-bottom));
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
   }
 
   @media (min-width: 768px) {
     .fg-float {
-      position: fixed;
       right: 1.25rem;
       bottom: 1.5rem;
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
     }
   }
 
   .fg-float__btn {
     display: inline-flex;
-    width: 3.35rem;
-    height: 3.35rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    padding: 0;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: 50%;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
     color: white;
     box-shadow: 0 10px 24px rgba(10, 29, 55, 0.22);
     transition:
@@ -1833,9 +1839,18 @@
     filter: brightness(1.08);
   }
 
-  /* Sticky mobile CTA bar */
+  .fg-float__btn--quote {
+    background: #d4af37;
+    color: #0a1d37;
+  }
+
+  .fg-float__btn--quote:hover {
+    filter: brightness(1.06);
+  }
+
+  /* Sticky mobile CTA bar — replaced by circular floats */
   .fg-mobile-cta {
-    display: block;
+    display: none;
     position: fixed;
     left: 0;
     right: 0;

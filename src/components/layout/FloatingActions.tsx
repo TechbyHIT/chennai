@@ -4,8 +4,8 @@ function WhatsAppIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="22"
-      height="22"
+      width="24"
+      height="24"
       aria-hidden="true"
       focusable="false"
     >
@@ -21,14 +21,25 @@ function PhoneIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="20"
-      height="20"
+      width="22"
+      height="22"
       aria-hidden="true"
       focusable="false"
     >
       <path
         fill="currentColor"
         d="M6.62 10.79a15.15 15.15 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.4 21 3 13.6 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z"
+      />
+    </svg>
+  );
+}
+
+function QuoteIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L19.5 9H15zM8 13h8v2H8v-2zm0 4h8v2H8v-2zm0-8h5v2H8V9z"
       />
     </svg>
   );
@@ -54,6 +65,14 @@ export function FloatingActions() {
         title="Call now"
       >
         <PhoneIcon />
+      </a>
+      <a
+        href="/contact/"
+        className="fg-float__btn fg-float__btn--quote"
+        aria-label="Get a free quote"
+        title="Get quote"
+      >
+        <QuoteIcon />
       </a>
     </div>
   );

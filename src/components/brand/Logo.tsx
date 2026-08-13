@@ -38,8 +38,8 @@ export function Logo({
         className={cn(
           "block h-auto w-auto max-w-full object-contain object-left",
           compact
-            ? "max-h-11 max-w-[160px] sm:max-h-12 sm:max-w-[200px] lg:max-h-14 lg:max-w-[260px]"
-            : "max-h-[52px] max-w-[200px] sm:max-h-[65px] sm:max-w-[280px] lg:max-h-[85px] lg:max-w-[420px]",
+            ? "max-h-[58px] max-w-[230px] sm:max-h-14 sm:max-w-[240px] lg:max-h-16 lg:max-w-[280px]"
+            : "max-h-[58px] max-w-[230px] sm:max-h-[65px] sm:max-w-[280px] lg:max-h-[85px] lg:max-w-[420px]",
           light && "rounded-md bg-white px-2 py-1",
         )}
       />
