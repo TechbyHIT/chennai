@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   // Keep URL shape consistent with SITE_CONFIG.trailingSlash and all route builders.
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
   compress: true,
   // Browser source maps off by default; keep explicit for lean prod disks.
   productionBrowserSourceMaps: false,

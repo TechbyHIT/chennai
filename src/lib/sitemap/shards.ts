@@ -73,7 +73,7 @@ function pageToEntry(page: PageRecord): SitemapUrlEntry {
           : page.crawlPriority === "medium"
             ? 0.6
             : 0.4,
-    images: page.openGraphImage
+    images: page.openGraphImage?.startsWith("/images/homepage/")
       ? [toAbsoluteHttpsUrl(page.openGraphImage)]
       : undefined,
   });
@@ -146,10 +146,7 @@ export function listSitemapShardKeys(): Array<{ id: string }> {
     }
     const pages = getPagesForShard(shard);
     const groups = chunk(pages, max);
-    if (groups.length === 0) {
-      keys.push({ id: `${shard}-0` });
-      continue;
-    }
+    if (groups.length === 0) continue;
     groups.forEach((_, index) => keys.push({ id: `${shard}-${index}` }));
   }
   return keys;

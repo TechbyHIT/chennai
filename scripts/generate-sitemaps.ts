@@ -8,20 +8,25 @@ import {
 import {
   assertValidSitemapIndex,
   assertValidUrlSet,
+  renderCombinedSitemapXml,
   renderSitemapIndexXml,
   renderSitemapShardXml,
 } from "../src/lib/sitemap/render";
 
 /**
  * Offline high-intent sitemap generation + validation.
- * Live site serves the same shards via /sitemap.xml and /sitemap/[id].xml.
+ * Live site serves the combined urlset at /sitemap.xml.
  */
 const outDir = join(process.cwd(), "reports", "sitemaps");
 mkdirSync(outDir, { recursive: true });
 
+const combinedXml = renderCombinedSitemapXml();
+assertValidUrlSet(combinedXml, "combined");
+writeFileSync(join(outDir, "sitemap.xml"), combinedXml);
+
 const indexXml = renderSitemapIndexXml();
 assertValidSitemapIndex(indexXml);
-writeFileSync(join(outDir, "sitemap.xml"), indexXml);
+writeFileSync(join(outDir, "sitemap-index.xml"), indexXml);
 
 const files: Array<{ id: string; count: number; file: string }> = [];
 

@@ -4,7 +4,7 @@ import {
   listSitemapShardKeys,
   resolveShardEntries,
 } from "@/lib/sitemap/shards";
-import { renderSitemapIndexXml, renderSitemapShardXml } from "@/lib/sitemap/render";
+import { renderCombinedSitemapXml, renderSitemapIndexXml, renderSitemapShardXml } from "@/lib/sitemap/render";
 import { validateSitemapIndexXml, validateUrlSetXml } from "@/lib/sitemap/xml";
 
 describe("high-intent sitemap shards", () => {
@@ -35,5 +35,20 @@ describe("high-intent sitemap shards", () => {
     expect(validateSitemapIndexXml(indexXml)).toEqual([]);
     const coreXml = renderSitemapShardXml("core");
     expect(validateUrlSetXml(coreXml)).toEqual([]);
+  });
+
+  it("emits a combined urlset with real HTTPS locs for GSC", () => {
+    const xml = renderCombinedSitemapXml();
+    expect(validateUrlSetXml(xml)).toEqual([]);
+    expect(xml).toContain("<urlset");
+    expect(xml).not.toContain("<sitemapindex");
+    expect((xml.match(/<loc>/g) ?? []).length).toBeGreaterThan(20);
+  });
+
+  it("does not list empty child shards", () => {
+    const keys = listSitemapShardKeys().map((item) => item.id);
+    for (const id of keys) {
+      expect(resolveShardEntries(id).length).toBeGreaterThan(0);
+    }
   });
 });

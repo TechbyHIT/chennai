@@ -1,18 +1,18 @@
 import {
-  assertValidSitemapIndex,
-  renderSitemapIndexXml,
+  assertValidUrlSet,
+  renderCombinedSitemapXml,
 } from "@/lib/sitemap/render";
 
 export const revalidate = 86400;
 export const dynamic = "force-static";
 
 /**
- * Explicit high-intent sitemap index.
- * MetadataRoute index was soft-404'ing into app/[segment]; this route guarantees HTTP 200 XML.
+ * Combined high-intent urlset (not an index).
+ * Google Search Console fetches this one file; child shards stay at /sitemap/*.xml.
  */
 export async function GET() {
-  const xml = renderSitemapIndexXml();
-  assertValidSitemapIndex(xml);
+  const xml = renderCombinedSitemapXml();
+  assertValidUrlSet(xml, "combined");
 
   return new Response(xml, {
     status: 200,
