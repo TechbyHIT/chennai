@@ -6,6 +6,7 @@ import {
   getServiceBySlug,
   getServices,
 } from "@/lib/data/repositories";
+import { STATIC_GENERATION, isSeedCity } from "@/config/static-generation";
 import { parseServiceInCitySlug } from "@/lib/routing/service-location-urls";
 import { generateLandingMetadata } from "@/lib/seo/generate-landing-metadata";
 import { buildServiceCitySeo } from "@/lib/seo/service-location-seo";
@@ -17,10 +18,14 @@ export const dynamicParams = true;
 
 type Props = { params: Promise<{ segment: string }> };
 
-/** Prebuild all published service × served city hubs. */
+/** No city money-pages at build — ISR on first request (faster VPS deploys). */
 export async function generateStaticParams() {
+  const seed = STATIC_GENERATION.seedCitySlugs;
+  if (seed.length === 0) return [];
   const services = getServices({ publishedOnly: true });
-  const cities = getLocations({ publishedOnly: true, servedOnly: true });
+  const cities = getLocations({ publishedOnly: true, servedOnly: true }).filter(
+    (city) => isSeedCity(city.slug),
+  );
   return cities.flatMap((city) =>
     services.map((service) => ({
       segment: `${service.slug}-in-${city.slug}`,

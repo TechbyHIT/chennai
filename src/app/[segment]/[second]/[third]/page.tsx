@@ -1,9 +1,7 @@
 import {
   getAreaBySlug,
-  getAreas,
   getLocationBySlug,
   getServiceBySlug,
-  getServices,
 } from "@/lib/data/repositories";
 import {
   buildServiceStateCityAreaPath,
@@ -19,17 +17,7 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const chennai = getLocationBySlug("chennai");
-  if (!chennai) return [];
-  const areas = getAreas({ publishedOnly: true, parentId: chennai.id }).slice(0, 2);
-  const services = getServices({ publishedOnly: true }).slice(0, 2);
-  return areas.flatMap((area) =>
-    services.map((service) => ({
-      segment: chennai.slug,
-      second: area.slug,
-      third: service.slug,
-    })),
-  );
+  return [];
 }
 
 /**

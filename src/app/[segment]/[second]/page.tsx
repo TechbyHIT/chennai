@@ -1,8 +1,6 @@
 import {
   getLocationBySlug,
-  getLocations,
   getServiceBySlug,
-  getServices,
 } from "@/lib/data/repositories";
 import { buildServiceInCityPath } from "@/lib/routing/service-location-urls";
 import { buildServiceCitySeo } from "@/lib/seo/service-location-seo";
@@ -15,14 +13,7 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ segment: string; second: string }> };
 
 export async function generateStaticParams() {
-  const locations = getLocations({ publishedOnly: true, servedOnly: true }).slice(0, 2);
-  const services = getServices({ publishedOnly: true }).slice(0, 2);
-  return locations.flatMap((location) =>
-    services.map((service) => ({
-      segment: location.slug,
-      second: service.slug,
-    })),
-  );
+  return [];
 }
 
 /**

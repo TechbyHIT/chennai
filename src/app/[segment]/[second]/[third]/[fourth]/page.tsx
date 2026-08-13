@@ -2,11 +2,8 @@ import { PremiumServiceLanding } from "@/components/sections/PremiumServiceLandi
 import { buildPremiumLanding } from "@/lib/content/build-premium-landing";
 import {
   getAreaBySlug,
-  getAreas,
   getLocationBySlug,
-  getLocations,
   getServiceBySlug,
-  getServices,
 } from "@/lib/data/repositories";
 import { STATE_SLUG } from "@/lib/routing/service-location-urls";
 import { generateLandingMetadata } from "@/lib/seo/generate-landing-metadata";
@@ -26,37 +23,9 @@ type Props = {
   }>;
 };
 
-/**
- * Prebuild a large seed of service×area URLs.
- * Remaining combinations stay available via dynamicParams + ISR.
- */
+/** Service×area HTML is ISR-only to keep .next small on shared SSDs. */
 export async function generateStaticParams() {
-  const services = getServices({ publishedOnly: true });
-  // Keep static seed small at 500k scale — ISR + dynamicParams handle the rest.
-  const seedCities = getLocations({ publishedOnly: true, servedOnly: true }).filter(
-    (city) =>
-      city.slug === "coimbatore" ||
-      city.slug === "chennai" ||
-      city.slug === "madurai" ||
-      city.slug === "salem" ||
-      city.slug === "tiruppur",
-  );
-
-  return seedCities.flatMap((city) => {
-    const areaLimit = city.slug === "coimbatore" || city.slug === "chennai" ? 40 : 15;
-    const areas = getAreas({ publishedOnly: true, parentId: city.id }).slice(
-      0,
-      areaLimit,
-    );
-    return services.flatMap((service) =>
-      areas.map((area) => ({
-        segment: service.slug,
-        second: STATE_SLUG,
-        third: city.slug,
-        fourth: area.slug,
-      })),
-    );
-  });
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -5,9 +5,7 @@ import { Section } from "@/components/ui/Section";
 import { buildAreaPath, buildLocationPath } from "@/config/routes";
 import {
   getAreaBySlug,
-  getAreas,
   getLocationBySlug,
-  getLocations,
   getServices,
 } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
@@ -20,19 +18,9 @@ export const dynamicParams = true;
 
 type Props = { params: Promise<{ locationSlug: string; areaSlug: string }> };
 
-/** Prebuild a seed of area hubs; scaled localities stay ISR via dynamicParams. */
+/** Area hubs are ISR-only — scaled localities must not be written at build. */
 export async function generateStaticParams() {
-  return getLocations({ publishedOnly: true, servedOnly: true }).flatMap((city) =>
-    getAreas({
-      publishedOnly: true,
-      parentId: city.id,
-      curatedOnly: city.slug !== "coimbatore" && city.slug !== "chennai",
-      scaledLimit: city.slug === "coimbatore" || city.slug === "chennai" ? 30 : 0,
-    }).map((area) => ({
-      locationSlug: city.slug,
-      areaSlug: area.slug,
-    })),
-  );
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

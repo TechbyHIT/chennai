@@ -1,6 +1,6 @@
 import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { buildSolutionPath } from "@/config/routes";
-import { getProblemBySlug, getProblems } from "@/lib/data/repositories";
+import { getProblemBySlug } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
 import { generatePageMetadata } from "@/lib/seo/generate-page-metadata";
 import type { Metadata } from "next";
@@ -12,9 +12,7 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ problemSlug: string }> };
 
 export async function generateStaticParams() {
-  return getProblems({ publishedOnly: true })
-    .slice(0, 3)
-    .map((problem) => ({ problemSlug: problem.slug }));
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

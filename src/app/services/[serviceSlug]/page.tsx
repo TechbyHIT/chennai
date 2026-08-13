@@ -3,11 +3,7 @@ import { ProgrammaticPage } from "@/components/sections/ProgrammaticPage";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { buildServicePath } from "@/config/routes";
-import {
-  getLocations,
-  getServiceBySlug,
-  getServices,
-} from "@/lib/data/repositories";
+import { getLocations, getServiceBySlug } from "@/lib/data/repositories";
 import { getPageByPath } from "@/lib/pages/page-registry";
 import { serviceSchema } from "@/lib/schema/service-schema";
 import { generatePageMetadata } from "@/lib/seo/generate-page-metadata";
@@ -20,9 +16,7 @@ export const dynamicParams = true;
 type Props = { params: Promise<{ serviceSlug: string }> };
 
 export async function generateStaticParams() {
-  return getServices({ publishedOnly: true }).map((service) => ({
-    serviceSlug: service.slug,
-  }));
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
