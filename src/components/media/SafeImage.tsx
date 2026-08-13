@@ -3,9 +3,8 @@
 import Image, { type ImageProps } from "next/image";
 import { useState } from "react";
 import { BLUR_DATA_URL } from "@/lib/media/blur-placeholder";
+import { FALLBACK_IMAGE } from "@/data/homepage-images";
 import { cn } from "@/lib/utils/cn";
-
-const FALLBACK = "/images/hero-balcony.jpg";
 
 type SafeImageProps = Omit<ImageProps, "src" | "alt"> & {
   src?: string | null;
@@ -16,7 +15,7 @@ type SafeImageProps = Omit<ImageProps, "src" | "alt"> & {
 export function SafeImage({
   src,
   alt,
-  fallbackSrc = FALLBACK,
+  fallbackSrc = FALLBACK_IMAGE,
   className,
   onError,
   placeholder,

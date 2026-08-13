@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -23,7 +23,7 @@ const PILLARS = [
 ];
 
 export function AboutIntro({
-  imageSrc = "/images/hero-balcony.jpg",
+  imageSrc = "/images/homepage/glory-home-01.png",
   secondarySrc,
 }: {
   imageSrc?: string;

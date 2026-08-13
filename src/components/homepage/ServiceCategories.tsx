@@ -12,7 +12,7 @@ export function ServiceCategories({ services }: { services: Service[] }) {
     const match = services.find((service) => column.href.includes(service.slug));
     return {
       ...column,
-      image: match?.heroImage || "/images/hero-balcony.jpg",
+      image: match?.heroImage || "/images/homepage/glory-home-01.png",
       summary: match?.summary || "Measured installation for Tamil Nadu homes.",
     };
   });

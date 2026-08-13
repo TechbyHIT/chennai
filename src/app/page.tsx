@@ -165,7 +165,7 @@ export default function HomePage() {
   const locations = getLocations({ publishedOnly: true, servedOnly: true });
   const localityCount = countPublishedServedAreas();
   const gallery = HOMEPAGE_PROJECT_IMAGES;
-  const fallbackHero = "/images/hero-balcony.jpg";
+  const fallbackHero = HOMEPAGE_PROJECT_IMAGES[0] ?? "/images/logo.png";
   const galleryImage = (index: number): string =>
     gallery[index] || gallery[0] || fallbackHero;
   const aboutSecondary = galleryImage(1);

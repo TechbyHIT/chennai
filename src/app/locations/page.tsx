@@ -83,7 +83,7 @@ export default function LocationsIndexPage() {
               >
                 <div className="relative aspect-[16/10] bg-brand-50">
                   <Image
-                    src={photos[index % photos.length] ?? "/images/hero-balcony.jpg"}
+                    src={photos[index % photos.length] ?? "/images/homepage/glory-home-01.png"}
                     alt={`Installations near ${location.name}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"

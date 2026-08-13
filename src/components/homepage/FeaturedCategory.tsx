@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -44,7 +44,7 @@ export function FeaturedCategory({
           transition={{ duration: 0.45 }}
         >
           <SafeImage
-            src={service.heroImage || "/images/hero-balcony.jpg"}
+            src={service.heroImage || "/images/homepage/glory-home-01.png"}
             alt={`${service.name} by ${BUSINESS_CONFIG.name}`}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"

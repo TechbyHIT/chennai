@@ -78,7 +78,7 @@ export default function ServicesIndexPage() {
               >
                 <div className="relative aspect-[16/10] bg-brand-50">
                   <Image
-                    src={service.heroImage || "/images/hero-balcony.jpg"}
+                    src={service.heroImage || "/images/homepage/glory-home-01.png"}
                     alt={`${service.name} installation`}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { SafeImage } from "@/components/media/SafeImage";
@@ -20,7 +20,7 @@ export type HomeHeroStats = {
 };
 
 export function HomeHero({
-  heroSrc = "/images/hero-balcony.jpg",
+  heroSrc = "/images/homepage/glory-home-01.png",
   stats,
 }: {
   heroSrc?: string;

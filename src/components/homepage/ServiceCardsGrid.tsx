@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -60,7 +60,7 @@ export function ServiceCardsGrid({
         const photo =
           images[index % Math.max(images.length, 1)] ||
           service.heroImage ||
-          "/images/hero-balcony.jpg";
+          "/images/homepage/glory-home-01.png";
 
         return (
         <motion.article

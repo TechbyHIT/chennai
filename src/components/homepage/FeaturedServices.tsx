@@ -37,7 +37,7 @@ export function FeaturedServices({ services }: { services: Service[] }) {
           >
             <div className="relative aspect-[16/10]">
               <Image
-                src={service.heroImage || "/images/hero-balcony.jpg"}
+                src={service.heroImage || "/images/homepage/glory-home-01.png"}
                 alt={`${service.name} installation`}
                 fill
                 sizes="(max-width: 640px) 100vw, 33vw"

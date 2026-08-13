@@ -32,7 +32,7 @@ export const BUSINESS_CONFIG = {
   },
 
   logo: "/images/logo.png",
-  defaultOpenGraphImage: "/images/open-graph.jpg",
+  defaultOpenGraphImage: "/images/homepage/glory-home-01.png",
 
   serviceArea: {
     primaryCity: "Coimbatore",

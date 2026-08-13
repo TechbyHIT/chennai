@@ -35,7 +35,7 @@ export function ProgrammaticPage({
   const media = service
     ? getServiceMedia(service.slug)
     : {
-        hero: getHomepageGallery(1)[0] ?? "/images/hero-balcony.jpg",
+        hero: getHomepageGallery(1)[0] ?? "/images/homepage/glory-home-01.png",
         gallery: getHomepageGallery(8),
       };
   const hero = media.hero;

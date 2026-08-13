@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion", "zod"],
   },
   images: {
+    // Serve /public files directly — no /_next/image cache (missing files + disk).
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     // Leaner variant set = less image-optimizer cache on a 50-site SSD.
     deviceSizes: [360, 640, 768, 1024, 1280],

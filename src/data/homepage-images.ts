@@ -25,3 +25,6 @@ export const HOMEPAGE_PROJECT_IMAGES: string[] = [
   "/images/homepage/glory-home-23.png",
   "/images/homepage/glory-home-24.png",
 ];
+
+export const FALLBACK_IMAGE =
+  HOMEPAGE_PROJECT_IMAGES[0] ?? "/images/logo.png";
