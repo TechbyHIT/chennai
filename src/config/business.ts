@@ -45,7 +45,7 @@ export const BUSINESS_CONFIG = {
   },
 
   logo: "/images/logo.png",
-  defaultOpenGraphImage: "/images/homepage/glory-home-01.png",
+  defaultOpenGraphImage: "/images/services/invisible-grills/01.jpg",
 
   serviceArea: {
     primaryCity: "Coimbatore",
@@ -62,7 +62,10 @@ export const BUSINESS_CONFIG = {
 
   analytics: {
     googleTagManagerId: process.env.NEXT_PUBLIC_GTM_ID,
-    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID,
+    googleAnalyticsId:
+      process.env.NEXT_PUBLIC_GA_ID || "G-JP41KLQH39",
+    googleAdsId:
+      process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-18197506645",
     metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID,
     clarityId: process.env.NEXT_PUBLIC_CLARITY_ID,
   },

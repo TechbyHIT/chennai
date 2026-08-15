@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { Header } from "@/components/layout/Header";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
+import { GoogleTags } from "@/components/analytics/GoogleTags";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { BUSINESS_CONFIG } from "@/config/business";
 import { SITE_CONFIG } from "@/config/site";
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-IN" data-brand="glory" className={`${inter.variable} ${poppins.variable}`}>
       <body className="fg-mobile-shell">
+        <GoogleTags />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2"

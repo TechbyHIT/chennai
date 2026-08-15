@@ -18,12 +18,13 @@ export const dynamicParams = true;
 
 type Props = { params: Promise<{ segment: string }> };
 
-/** City money-pages for every served city (small set — not scaled localities). */
+/** Seed cities only — remaining /{service}-in-{city}/ pages are ISR. */
 export async function generateStaticParams() {
+  const seed = STATIC_GENERATION.seedCitySlugs;
+  if (seed.length === 0) return [];
   const services = getServices({ publishedOnly: true });
   const cities = getLocations({ publishedOnly: true, servedOnly: true }).filter(
-    (city) =>
-      STATIC_GENERATION.seedCitySlugs.length === 0 || isSeedCity(city.slug),
+    (city) => isSeedCity(city.slug),
   );
   return cities.flatMap((city) =>
     services.map((service) => ({

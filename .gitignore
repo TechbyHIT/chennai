@@ -50,6 +50,8 @@ next-env.d.ts
 
 # large synced project photos (regenerate with npm run media:sync)
 /public/images/projects/
+# Shipped, service-matched HD set is tracked:
+# /public/images/services/
 /public/images/hero-balcony.jpg
 /public/images/open-graph.jpg
 /public/images/logo.jpg

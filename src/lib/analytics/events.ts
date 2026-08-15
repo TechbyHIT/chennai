@@ -10,7 +10,9 @@ export function trackEvent(event: AnalyticsEvent, payload?: Record<string, strin
   if (typeof window === "undefined") return;
   const w = window as Window & {
     dataLayer?: Array<Record<string, unknown>>;
+    gtag?: (...args: unknown[]) => void;
   };
   w.dataLayer = w.dataLayer ?? [];
   w.dataLayer.push({ event, ...payload });
+  w.gtag?.("event", event, payload);
 }

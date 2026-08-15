@@ -1,5 +1,8 @@
+import { INVISIBLE_GRILL_HD_IMAGES } from "@/data/service-images";
+
 /** User-supplied Glory project photos for homepage hero/gallery. */
 export const HOMEPAGE_PROJECT_IMAGES: string[] = [
+  ...INVISIBLE_GRILL_HD_IMAGES,
   "/images/homepage/glory-home-01.png",
   "/images/homepage/glory-home-02.png",
   "/images/homepage/glory-home-03.png",
