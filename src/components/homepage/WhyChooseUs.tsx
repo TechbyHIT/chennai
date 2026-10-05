@@ -29,7 +29,7 @@ const ITEMS = [
   },
   {
     title: "Right system for the job",
-    body: "Invisible grills, safety nets, bird control and mosquito mesh are treated as distinct solutions.",
+    body: "Invisible grills, safety nets and bird control are treated as distinct solutions.",
   },
   {
     title: "Customer support",

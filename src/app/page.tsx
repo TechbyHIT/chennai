@@ -1,8 +1,10 @@
 import { AboutIntro } from "@/components/homepage/AboutIntro";
 import { AreasServe } from "@/components/homepage/AreasServe";
+import { ChennaiRegionDirectory } from "@/components/homepage/ChennaiRegionDirectory";
 import { FeaturedCategory } from "@/components/homepage/FeaturedCategory";
 import { HomeHero } from "@/components/homepage/HomeHero";
 import { HomeQuote } from "@/components/homepage/HomeQuote";
+import { MainServicesShowcase } from "@/components/homepage/MainServicesShowcase";
 import { ServiceCardsGrid } from "@/components/homepage/ServiceCardsGrid";
 import { TrustReviews } from "@/components/homepage/TrustReviews";
 import { WhyChooseUs } from "@/components/homepage/WhyChooseUs";
@@ -11,6 +13,8 @@ import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
+import { isChennaiBeltTown, sortChennaiRegionFirst } from "@/config/chennai-region";
+import { MAIN_SERVICE_SLUGS, sortMainServicesFirst } from "@/config/main-services";
 import { SITE_CONFIG } from "@/config/site";
 import { buildServicePath } from "@/config/routes";
 import { HOMEPAGE_PROJECT_IMAGES } from "@/data/homepage-images";
@@ -28,21 +32,31 @@ import type { Metadata } from "next";
 
 export const revalidate = 86400;
 
-const HOME_TITLE = "Invisible Grills & Safety Nets | Tamil Nadu";
+const HOME_TITLE = "Invisible Grills & Safety Nets in Chennai | Glory Grills";
 const HOME_DESCRIPTION =
-  "Premium invisible grill and safety net installation across Tamil Nadu - balconies, windows, apartments and villas. Free site measurement, written estimates, honest material grades.";
+  "Invisible grills, all types of safety nets, cloth hangers, sports nets and bird spikes in Chennai and within 150 km, plus Coimbatore and major Tamil Nadu cities. Free site visit.";
 
 export const metadata: Metadata = {
-  title: HOME_TITLE,
+  // `absolute` skips the "| Glory Grills" suffix so the full title fits in the SERP.
+  title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
   keywords: [
+    "invisible grills Chennai",
+    "invisible grill installation Chennai",
+    "safety nets Chennai",
+    "balcony safety nets Chennai",
+    "invisible grills near me",
     "invisible grills",
     "invisible grills Tamil Nadu",
+    "safety nets",
     "balcony safety nets",
-    "safety nets Chennai",
+    "cloth hangers",
+    "ceiling cloth hangers",
+    "sports nets",
+    "cricket practice nets",
+    "bird spikes",
     "bird nets",
     "pigeon nets",
-    "mosquito nets",
     "child safety nets",
     "pet safety nets",
     "balcony invisible grill installation",
@@ -77,7 +91,17 @@ const HOME_FAQS = [
   {
     question: "Which cities in Tamil Nadu do you serve?",
     answer:
-      "We serve customers across Tamil Nadu including Chennai, Coimbatore, Madurai, Tiruchirappalli, Salem, Tiruppur, Erode, Vellore, Hosur, Tirunelveli, Nagercoil and more - plus locality pages under those cities as verified coverage is ready. Share your exact area and we will confirm availability.",
+      "Our main service region is Chennai and the towns within roughly 150 km - Tambaram, Avadi, Poonamallee, Sriperumbudur, Guduvancheri, Tiruvallur, Chengalpattu, Mahabalipuram, Arakkonam, Kanchipuram, Tiruttani, Vandavasi, Ranipet, Cheyyar, Arcot, Tindivanam, Arani and Vellore. We also serve Coimbatore, Madurai, Tiruchirappalli, Salem, Tiruppur, Erode, Hosur, Tirunelveli and Ooty. Share your exact area and we will confirm availability.",
+  },
+  {
+    question: "Do you cover apartments and gated communities, including under-construction flats?",
+    answer:
+      "Yes - apartments and gated communities are most of our work. We measure ready-to-move flats, new bookings before handover and resale homes across Chennai, the 150 km belt towns and our other cities. For under-construction flats, book the measurement close to handover so openings, railing positions and society rules are final. High-rise towers need society permission for external work, which we plan into the visit.",
+  },
+  {
+    question: "Do you cover all areas of Chennai?",
+    answer:
+      "Yes - from Adyar, Velachery and the OMR / ECR corridor in the south to Anna Nagar, Porur and Avadi in the west, and Perambur, Kolathur and Madhavaram in the north, plus Tambaram, Chromepet and Pallavaram along GST Road. Each locality has its own page with the services available there.",
   },
   {
     question: "What is the difference between invisible grills and safety nets?",
@@ -98,6 +122,16 @@ const HOME_FAQS = [
     question: "Do you install bird netting and pigeon control?",
     answer:
       "Yes - bird nets, bird spikes and pigeon exclusion for balconies, terraces, utility shafts and commercial buildings across our Tamil Nadu coverage.",
+  },
+  {
+    question: "Do you install cloth hangers and sports nets?",
+    answer:
+      "Yes. We fit ceiling and balcony cloth drying hangers sized to your span and ceiling height, and cricket practice or sports perimeter nets sized to your terrace, compound or ground. Both are measured on site before the quote.",
+  },
+  {
+    question: "What are bird spikes and when should I use them instead of bird nets?",
+    answer:
+      "Bird spikes stop pigeons landing on specific points such as ledges, sunshades, parapets and AC units. Bird nets close off a whole opening such as a balcony or duct. Many homes use both - we recommend after seeing where the birds actually roost.",
   },
   {
     question: "Are mosquito nets the same as safety nets?",
@@ -122,12 +156,22 @@ const HOME_FAQS = [
 ];
 
 const POPULAR_COMBOS: Array<{ label: string; service: string; city: string }> = [
-  { label: "Invisible Grills in Coimbatore", service: "invisible-grills", city: "coimbatore" },
-  { label: "Safety Nets in Coimbatore", service: "safety-nets", city: "coimbatore" },
-  { label: "Balcony Safety Nets in Coimbatore", service: "balcony-safety-nets", city: "coimbatore" },
-  { label: "Bird Nets in Coimbatore", service: "bird-nets", city: "coimbatore" },
   { label: "Invisible Grills in Chennai", service: "invisible-grills", city: "chennai" },
   { label: "Safety Nets in Chennai", service: "safety-nets", city: "chennai" },
+  { label: "Balcony Safety Nets in Chennai", service: "balcony-safety-nets", city: "chennai" },
+  { label: "Bird Nets in Chennai", service: "bird-nets", city: "chennai" },
+  { label: "Cloth Hangers in Chennai", service: "cloth-hangers", city: "chennai" },
+  { label: "Sports Nets in Chennai", service: "sports-nets", city: "chennai" },
+  { label: "Bird Spikes in Chennai", service: "bird-spikes", city: "chennai" },
+  { label: "Invisible Grills in Tambaram", service: "invisible-grills", city: "tambaram" },
+  { label: "Invisible Grills in Avadi", service: "invisible-grills", city: "avadi" },
+  { label: "Safety Nets in Chengalpattu", service: "safety-nets", city: "chengalpattu" },
+  { label: "Invisible Grills in Kanchipuram", service: "invisible-grills", city: "kanchipuram" },
+  { label: "Safety Nets in Sriperumbudur", service: "safety-nets", city: "sriperumbudur" },
+  { label: "Invisible Grills in Vellore", service: "invisible-grills", city: "vellore" },
+  { label: "Safety Nets in Ranipet", service: "safety-nets", city: "ranipet" },
+  { label: "Invisible Grills in Coimbatore", service: "invisible-grills", city: "coimbatore" },
+  { label: "Safety Nets in Coimbatore", service: "safety-nets", city: "coimbatore" },
   { label: "Invisible Grills in Madurai", service: "invisible-grills", city: "madurai" },
   { label: "Invisible Grills in Tiruppur", service: "invisible-grills", city: "tiruppur" },
   { label: "Invisible Grills in Erode", service: "invisible-grills", city: "erode" },
@@ -161,7 +205,9 @@ function SectionHeader({
 
 export default function HomePage() {
   const services = getServices({ publishedOnly: true });
-  const locations = getLocations({ publishedOnly: true, servedOnly: true });
+  const locations = sortChennaiRegionFirst(
+    getLocations({ publishedOnly: true, servedOnly: true }),
+  );
   const localityCount = countPublishedServedAreas();
   const gallery = HOMEPAGE_PROJECT_IMAGES;
   const fallbackHero = HOMEPAGE_PROJECT_IMAGES[0] ?? "/images/logo.png";
@@ -182,7 +228,7 @@ export default function HomePage() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Installation services by Glory Invisible Grills",
-    itemListElement: services.map((service, index) => ({
+    itemListElement: sortMainServicesFirst(services).map((service, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: service.name,
@@ -214,14 +260,27 @@ export default function HomePage() {
         secondarySrc={aboutSecondary}
       />
 
+      <ChennaiRegionDirectory />
+
       <Section id="services" className="bg-white scroll-mt-28">
         <Container className="space-y-8">
           <SectionHeader
-            eyebrow="Our services"
-            title="Complete safety solutions for homes and apartments"
-            lead="Invisible grills, safety nets, bird protection and related systems - measured for Tamil Nadu homes."
+            eyebrow="Our core services"
+            title="Invisible grills, safety nets, cloth hangers, sports nets and bird spikes"
+            lead="The five things we install most - each measured on site and fitted across Tamil Nadu."
           />
-          <ServiceCardsGrid services={services} images={gallery} limit={9} />
+          <MainServicesShowcase services={services} fallbackImage={fallbackHero} />
+          <div className="space-y-4 pt-4">
+            <h3 className="font-display text-xl text-brand-900 sm:text-2xl">
+              More protection and utility installations
+            </h3>
+            <ServiceCardsGrid
+              services={services}
+              images={gallery}
+              limit={6}
+              excludeSlugs={MAIN_SERVICE_SLUGS}
+            />
+          </div>
           <p className="text-sm text-ink-500">
             Need a specific installation?{" "}
             <Link href="/services/" className="font-semibold text-brand-500 hover:text-brand-600">
@@ -281,7 +340,11 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <AreasServe locations={locations} localityCount={localityCount} />
+      {/* Belt towns are already listed in <ChennaiRegionDirectory />; show Chennai + the other hubs here. */}
+      <AreasServe
+        locations={locations.filter((city) => !isChennaiBeltTown(city.slug))}
+        localityCount={localityCount}
+      />
 
       <Section className="bg-white">
         <Container className="space-y-6">

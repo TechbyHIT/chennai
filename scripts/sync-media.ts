@@ -29,7 +29,6 @@ const FOLDER_TO_CATEGORY: Array<{ match: RegExp; category: string }> = [
   { match: /pet safety nets/i, category: "pet-safety-nets" },
   { match: /safety nets balcony/i, category: "safety-nets-balcony" },
   { match: /duct area nets/i, category: "duct-area-nets" },
-  { match: /mosquito nets/i, category: "mosquito-nets" },
   { match: /cloth hangers/i, category: "cloth-hangers" },
   { match: /cricket nets/i, category: "cricket-nets" },
   { match: /spikes/i, category: "bird-spikes" },
@@ -48,7 +47,6 @@ const SERVICE_CATEGORIES: Record<string, string[]> = {
   "pet-safety-nets": ["pet-safety-nets", "safety-nets-balcony"],
   "balcony-safety-nets": ["safety-nets-balcony", "invisible-grill-balcony"],
   "building-safety-nets": ["duct-area-nets", "safety-nets-balcony"],
-  "mosquito-nets": ["mosquito-nets", "invisible-grill-window"],
   "bird-nets": ["bird-spikes", "safety-nets-balcony", "duct-area-nets"],
   "monkey-nets": ["safety-nets-balcony", "duct-area-nets"],
   "bird-spikes": ["bird-spikes"],
@@ -183,7 +181,6 @@ function main() {
     new Set([
       ...(byCategory["invisible-grill-balcony"] ?? []).slice(0, 8),
       ...(byCategory["safety-nets-balcony"] ?? []).slice(0, 6),
-      ...(byCategory["mosquito-nets"] ?? []).slice(0, 3),
       ...(byCategory["cloth-hangers"] ?? []).slice(0, 3),
       ...(byCategory["bird-spikes"] ?? []).slice(0, 3),
       ...(byCategory["cricket-nets"] ?? []).slice(0, 3),

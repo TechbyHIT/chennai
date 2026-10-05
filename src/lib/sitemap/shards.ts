@@ -6,8 +6,6 @@ import { STATIC_CORE_PATHS } from "@/lib/pages/static-core-paths";
 import { getIndexablePages } from "@/lib/pages/page-registry";
 import {
   getAreaBySlug,
-  getAreas,
-  getLocationById,
   getLocations,
   getServices,
 } from "@/lib/data/repositories";
@@ -89,26 +87,16 @@ export function getPriorityServiceAreaPages(): PageRecord[] {
 
   const services = getServices({ publishedOnly: true });
   const pages: PageRecord[] = [];
+  // Curated areas and the priority-slug loop below overlap; keep each URL once.
+  const seenPaths = new Set<string>();
+  const add = (page: PageRecord) => {
+    if (seenPaths.has(page.path)) return;
+    seenPaths.add(page.path);
+    pages.push(page);
+  };
 
-  for (const area of getAreas({ publishedOnly: true, curatedOnly: true })) {
-    if (area.publicationStatus !== "published" || !area.isServed) continue;
-    const city = getLocationById(area.parentId);
-    if (
-      !city ||
-      !city.isServed ||
-      city.publicationStatus !== "published"
-    ) {
-      continue;
-    }
-
-    for (const service of services) {
-      const page = createServiceAreaPage(service, city, area);
-      if (isPageIndexable(page)) pages.push(page);
-    }
-  }
-
-  // Keep well-known Chennai / Coimbatore corridors even if a seed file
-  // omitted them from INITIAL_AREAS.
+  // Priority corridors only — listing every curated seed locality × service
+  // would push sitemap URL counts past crawl-budget guardrails.
   const extraCities = getLocations({
     publishedOnly: true,
     servedOnly: true,
@@ -125,7 +113,7 @@ export function getPriorityServiceAreaPages(): PageRecord[] {
       if (!area || area.publicationStatus !== "published") continue;
       for (const service of services) {
         const page = createServiceAreaPage(service, city, area);
-        if (isPageIndexable(page)) pages.push(page);
+        if (isPageIndexable(page)) add(page);
       }
     }
   }

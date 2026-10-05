@@ -21,7 +21,6 @@ const PRIORITY_SLUGS = [
   "bird-nets",
   "bird-spikes",
   "pigeon-nets",
-  "mosquito-nets",
   "monkey-nets",
   "cloth-hangers",
   "sports-nets",
@@ -32,14 +31,30 @@ export function ServiceCardsGrid({
   services,
   images = [],
   limit,
+  excludeSlugs = [],
+  hrefs,
+  placeLabel = "Tamil Nadu",
 }: {
   services: Service[];
   images?: string[];
   limit?: number;
+  /** Slugs already shown elsewhere on the page (e.g. the core services showcase). */
+  excludeSlugs?: readonly string[];
+  /** Serializable slug → href map for scoped destinations (e.g. service-in-city URLs). */
+  hrefs?: Record<string, string>;
+  /** Place label used in image alt text. */
+  placeLabel?: string;
 }) {
   const reduceMotion = useReducedMotion();
 
-  const bySlug = new Map(services.map((service) => [service.slug, service]));
+  const linkFor = (service: Service) => hrefs?.[service.slug] ?? buildServicePath(service.slug);
+
+  const excluded = new Set(excludeSlugs);
+  const bySlug = new Map(
+    services
+      .filter((service) => !excluded.has(service.slug))
+      .map((service) => [service.slug, service]),
+  );
   const ordered: Service[] = [];
   for (const slug of PRIORITY_SLUGS) {
     const match = bySlug.get(slug);
@@ -54,6 +69,7 @@ export function ServiceCardsGrid({
       bySlug.delete(service.slug);
     }
   }
+  if (ordered.length === 0) return null;
 
   const visible = typeof limit === "number" ? ordered.slice(0, limit) : ordered;
 
@@ -64,6 +80,7 @@ export function ServiceCardsGrid({
           images[index % Math.max(images.length, 1)] ||
           service.heroImage ||
           "/images/homepage/glory-home-01.png";
+        const placeSuffix = service.name.includes(placeLabel) ? "" : ` in ${placeLabel}`;
 
         return (
         <motion.article
@@ -74,11 +91,11 @@ export function ServiceCardsGrid({
           viewport={{ once: true, margin: "-40px" }}
           transition={{ delay: Math.min(index * 0.03, 0.3), duration: 0.4 }}
         >
-          <Link href={buildServicePath(service.slug)} className="flex h-full flex-col">
+          <Link href={linkFor(service)} className="flex h-full flex-col">
             <span className="relative block aspect-[16/10] bg-brand-100">
               <SafeImage
                 src={photo}
-                alt={`${service.name} installation in Tamil Nadu`}
+                alt={`${service.name} installation${placeSuffix}`}
                 fill
                 sizes="(max-width: 640px) 100vw, 33vw"
                 className="object-cover transition duration-500 group-hover:scale-[1.04]"

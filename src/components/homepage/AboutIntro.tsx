@@ -25,9 +25,23 @@ const PILLARS = [
 export function AboutIntro({
   imageSrc = "/images/homepage/glory-home-01.png",
   secondarySrc,
+  eyebrow,
+  title,
+  body,
+  pillars = PILLARS,
+  imageAlt,
+  secondaryAlt,
+  primaryCta = { label: "Learn more", href: "/about/" },
 }: {
   imageSrc?: string;
   secondarySrc?: string;
+  eyebrow?: string;
+  title?: React.ReactNode;
+  body?: React.ReactNode;
+  pillars?: Array<{ title: string; text: string }>;
+  imageAlt?: string;
+  secondaryAlt?: string;
+  primaryCta?: { label: string; href: string };
 }) {
   const reduceMotion = useReducedMotion();
 
@@ -44,7 +58,7 @@ export function AboutIntro({
           <div className="relative mt-6 aspect-[3/4] overflow-hidden rounded-[1.35rem]">
             <SafeImage
               src={imageSrc}
-              alt={`${BUSINESS_CONFIG.name} invisible grill installation`}
+              alt={imageAlt ?? `${BUSINESS_CONFIG.name} invisible grill installation`}
               fill
               sizes="(max-width: 1024px) 45vw, 22vw"
               className="object-cover"
@@ -53,7 +67,7 @@ export function AboutIntro({
           <div className="relative aspect-[3/4] overflow-hidden rounded-[1.35rem]">
             <SafeImage
               src={secondarySrc || imageSrc}
-              alt={`${BUSINESS_CONFIG.name} balcony safety installation`}
+              alt={secondaryAlt ?? `${BUSINESS_CONFIG.name} balcony safety installation`}
               fill
               sizes="(max-width: 1024px) 45vw, 22vw"
               className="object-cover"
@@ -65,39 +79,43 @@ export function AboutIntro({
           <div className="space-y-3">
             <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-500">
               <span className="h-px w-8 bg-cta-500" aria-hidden="true" />
-              About {BUSINESS_CONFIG.name}
+              {eyebrow ?? `About ${BUSINESS_CONFIG.name}`}
             </p>
             <h2 className="font-display text-3xl font-bold text-brand-900 sm:text-4xl">
-              Premium safety solutions for modern homes
+              {title ?? "Premium safety solutions for modern homes"}
             </h2>
-            <p className="text-base leading-8 text-ink-700">
-              {BUSINESS_CONFIG.name} installs{" "}
-              <Link
-                href={buildServicePath("invisible-grills")}
-                className="font-semibold text-brand-500 hover:text-brand-600"
-              >
-                invisible grills
-              </Link>
-              ,{" "}
-              <Link
-                href={buildServicePath("safety-nets")}
-                className="font-semibold text-brand-500 hover:text-brand-600"
-              >
-                safety nets
-              </Link>
-              , bird netting and related protection systems for balconies, windows, terraces and
-              utility areas across Tamil Nadu. Every project starts with a free site measurement so
-              spacing, tension and fixing decisions follow the actual opening - not a brochure.
-            </p>
-            <p className="text-base leading-8 text-ink-700">
-              We focus on clear views, honest material grades and neat finishing for apartments,
-              villas and high-rises - so families get practical protection without compromising the
-              look of their home.
-            </p>
+            {body ?? (
+              <>
+                <p className="text-base leading-8 text-ink-700">
+                  {BUSINESS_CONFIG.name} installs{" "}
+                  <Link
+                    href={buildServicePath("invisible-grills")}
+                    className="font-semibold text-brand-500 hover:text-brand-600"
+                  >
+                    invisible grills
+                  </Link>
+                  ,{" "}
+                  <Link
+                    href={buildServicePath("safety-nets")}
+                    className="font-semibold text-brand-500 hover:text-brand-600"
+                  >
+                    safety nets
+                  </Link>
+                  , bird netting and related protection systems for balconies, windows, terraces and
+                  utility areas across Tamil Nadu. Every project starts with a free site measurement so
+                  spacing, tension and fixing decisions follow the actual opening - not a brochure.
+                </p>
+                <p className="text-base leading-8 text-ink-700">
+                  We focus on clear views, honest material grades and neat finishing for apartments,
+                  villas and high-rises - so families get practical protection without compromising the
+                  look of their home.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            {PILLARS.map((pillar) => (
+            {pillars.map((pillar) => (
               <article
                 key={pillar.title}
                 className="rounded-2xl border border-brand-100 bg-white p-4 shadow-soft"
@@ -111,8 +129,8 @@ export function AboutIntro({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button href="/about/" variant="secondary">
-              Learn more
+            <Button href={primaryCta.href} variant="secondary">
+              {primaryCta.label}
             </Button>
             <Button href={`tel:${BUSINESS_CONFIG.phone.raw}`} external>
               Call {BUSINESS_CONFIG.phone.display}

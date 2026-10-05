@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BUSINESS_CONFIG } from "@/config/business";
 
 function WhatsAppIcon() {
@@ -66,14 +67,14 @@ export function FloatingActions() {
       >
         <PhoneIcon />
       </a>
-      <a
+      <Link
         href="/contact/"
         className="fg-float__btn fg-float__btn--quote"
         aria-label="Get a free quote"
         title="Get quote"
       >
         <QuoteIcon />
-      </a>
+      </Link>
     </div>
   );
 }

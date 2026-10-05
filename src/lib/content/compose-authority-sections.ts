@@ -284,10 +284,7 @@ export function composeUniqueFaqs(
     },
     {
       question: `How is ${service.shortName.toLowerCase()} different from mosquito mesh?`,
-      answer:
-        service.slug.includes("mosquito")
-          ? `Mosquito nets are insect screens. If you also need fall protection, ask about safety nets or invisible grills as a separate system.`
-          : `Mosquito mesh is for insects. ${service.shortName} is specified for a different job — fall protection, exclusion or utility use depending on the product.`,
+      answer: `Mosquito mesh is for insects. ${service.shortName} is specified for a different job — fall protection, exclusion or utility use depending on the product.`,
     },
     {
       question: `Can you plan for child safety in ${place}?`,
@@ -347,7 +344,7 @@ export function composeUniqueFaqs(
     },
     {
       question: `Which safety solution is best for apartments in ${cityName}?`,
-      answer: `It depends on intent: invisible grills for discreet fall-risk coverage, safety nets for denser mesh, bird nets for roosting exclusion, or mosquito nets for insects. Measurement confirms the fit.`,
+      answer: `It depends on intent: invisible grills for discreet fall-risk coverage, safety nets for denser mesh, or bird nets for roosting exclusion. Measurement confirms the fit.`,
     },
     {
       question: `How can I protect my balcony from birds in ${place}?`,

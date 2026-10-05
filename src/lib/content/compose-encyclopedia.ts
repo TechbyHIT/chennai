@@ -264,14 +264,13 @@ export function composeEncyclopediaArticle(input: {
       seed + 8,
     ),
     paragraphs: [
-      `Search engines surface overlapping queries for invisible grills, safety nets, mosquito nets, bird nets, monkey nets and cloth hangers. An accurate comparison table starts with intent, not synonym matching.`,
+      `Search engines surface overlapping queries for invisible grills, safety nets, bird nets, monkey nets and cloth hangers. An accurate comparison table starts with intent, not synonym matching.`,
       `${service.name} should be selected when its designed job matches the opening in ${place}. If the intent differs, related Glory pages in the ${city.name} cluster are the correct next step.`,
     ],
     bullets: rotate(
       [
         "Invisible grills — discreet cable-based fall-risk coverage",
         "Safety / balcony nets — denser mesh edge coverage",
-        "Mosquito nets — insect screening, not fall protection",
         "Bird nets / spikes — roosting exclusion or deterrence",
         "Monkey nets — intrusion exclusion where relevant",
         "Cloth hangers — drying utility systems",

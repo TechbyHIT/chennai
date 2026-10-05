@@ -9,7 +9,6 @@ const QUICK_SERVICES = [
   { slug: "safety-nets", label: "Safety nets" },
   { slug: "balcony-safety-nets", label: "Balcony nets" },
   { slug: "children-safety-nets", label: "Child nets" },
-  { slug: "mosquito-nets", label: "Mosquito nets" },
   { slug: "bird-nets", label: "Bird nets" },
   { slug: "monkey-nets", label: "Monkey nets" },
   { slug: "ceiling-cloth-hangers", label: "Cloth hangers" },

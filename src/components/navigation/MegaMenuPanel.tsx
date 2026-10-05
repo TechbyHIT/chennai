@@ -1,51 +1,103 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { MegaMenuColumn } from "@/config/mega-menu";
+
+function uniqueLinks(column: MegaMenuColumn, limit = 12) {
+  const seen = new Set<string>();
+  const links: MegaMenuColumn["links"] = [];
+  for (const link of column.links) {
+    if (seen.has(link.href)) continue;
+    seen.add(link.href);
+    links.push(link);
+    if (links.length >= limit) break;
+  }
+  return links;
+}
 
 export function MegaMenuPanel({
   columns,
   footerHref,
   footerLabel,
+  top,
 }: {
   columns: MegaMenuColumn[];
   footerHref: string;
   footerLabel: string;
+  top: number;
 }) {
+  const [active, setActive] = useState(0);
+  const column = columns[active] ?? columns[0];
+  if (!column) return null;
+  const links = uniqueLinks(column);
+
   return (
-    <div className="absolute left-1/2 top-full z-50 w-[min(78rem,calc(100vw-1.5rem))] -translate-x-1/2 pt-3">
-      <div className="overflow-hidden rounded-[1.5rem] border border-brand-100 bg-white shadow-[0_30px_80px_rgba(10,29,55,0.14)]">
-        <div className="max-h-[min(72vh,40rem)] overflow-y-auto p-5 sm:p-6">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-            {columns.map((column) => (
-              <div key={column.title} className="min-w-0">
+    <div
+      className="fixed left-1/2 z-50 w-[min(52rem,calc(100vw-2rem))] -translate-x-1/2 pt-2"
+      style={{ top }}
+    >
+      <div className="overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-[0_24px_60px_rgba(10,29,55,0.16)]">
+        <div className="grid min-h-[22rem] grid-cols-[13.5rem_1fr]">
+          <div className="flex flex-col gap-0.5 bg-brand-800 p-2.5">
+            {columns.map((item, index) => {
+              const selected = index === active;
+              return (
                 <Link
-                  href={column.href}
-                  className="font-display text-sm font-bold text-brand-800 hover:text-cta-600"
+                  key={item.title}
+                  href={item.href}
+                  onMouseEnter={() => setActive(index)}
+                  onFocus={() => setActive(index)}
+                  className={`rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors ${
+                    selected
+                      ? "bg-white text-brand-900"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`}
                 >
-                  {column.title}
+                  {item.title}
                 </Link>
-                <ul className="mt-3 space-y-1.5">
-                  {column.links.slice(0, 8).map((link) => (
-                    <li key={`${column.title}-${link.label}-${link.href}`}>
-                      <Link
-                        href={link.href}
-                        className="block text-[0.84rem] leading-snug text-ink-500 hover:text-brand-600"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-col p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-cta-600">
+                  {column.title}
+                </p>
+                <p className="mt-1 font-display text-lg font-bold text-brand-900">
+                  Popular pages
+                </p>
               </div>
-            ))}
+              <Link
+                href={column.href}
+                className="shrink-0 text-sm font-semibold text-brand-700 hover:text-cta-600"
+              >
+                View all
+              </Link>
+            </div>
+
+            <ul className="mt-4 grid flex-1 content-start gap-1 sm:grid-cols-2">
+              {links.map((link) => (
+                <li key={`${column.title}-${link.label}-${link.href}`}>
+                  <Link
+                    href={link.href}
+                    className="block rounded-lg px-2.5 py-2 text-sm text-ink-700 hover:bg-brand-50 hover:text-brand-800"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-brand-100 bg-brand-50 px-6 py-3.5">
-          <p className="text-sm font-medium text-ink-700">
-            High-intent services, property types and solutions — all linked to real pages.
-          </p>
+
+        <div className="flex items-center justify-between gap-3 border-t border-brand-100 bg-brand-50 px-5 py-3">
+          <p className="text-sm text-ink-700">Tamil Nadu installation, measured on site.</p>
           <Link
             href={footerHref}
-            className="text-sm font-semibold text-brand-600 hover:text-cta-600"
+            className="text-sm font-semibold text-brand-800 hover:text-cta-600"
           >
             {footerLabel}
           </Link>

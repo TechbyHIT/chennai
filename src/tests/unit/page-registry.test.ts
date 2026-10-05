@@ -16,10 +16,10 @@ describe("page registry", () => {
     expect(getPageByPath("/locations/visakhapatnam/")).toBeUndefined();
   });
 
-  it("reports counts and capacity near 10000k (10M) scale", () => {
+  it("reports counts and capacity at the served-footprint scale", () => {
     const counts = getPageCounts();
-    expect(counts.total).toBeGreaterThan(9_500_000);
-    expect(counts.byType["service-area"]).toBeGreaterThan(9_000_000);
+    expect(counts.total).toBeGreaterThan(2_000_000);
+    expect(counts.byType["service-area"]).toBeGreaterThan(1_800_000);
     expect(estimatePossiblePageCapacity()).toBe(counts.total);
   });
 

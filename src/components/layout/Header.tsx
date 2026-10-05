@@ -13,8 +13,10 @@ import { useEffect, useRef, useState } from "react";
 
 export function Header() {
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [openMega, setOpenMega] = useState<"services" | "areas" | null>(null);
+  const [panelTop, setPanelTop] = useState(0);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -34,6 +36,30 @@ export function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!openMega) return;
+    const measure = () => {
+      const bottom = headerRef.current?.getBoundingClientRect().bottom ?? 0;
+      setPanelTop(bottom);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure);
+    };
+  }, [openMega, scrolled]);
+
+  useEffect(() => {
+    if (!openMega) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenMega(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openMega]);
+
   const openMenu = (menu: "services" | "areas") => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpenMega(menu);
@@ -50,6 +76,7 @@ export function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={`sticky top-0 z-50 w-full border-b pt-[var(--fg-safe-top)] transition-all duration-300 ${
         scrolled
           ? "border-brand-100 bg-white shadow-[0_10px_30px_rgba(10,29,55,0.08)]"
@@ -79,11 +106,11 @@ export function Header() {
 
       <div className="relative mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-2 px-3 sm:min-h-[80px] sm:px-6 lg:min-h-[88px] lg:px-8">
         <div className="flex min-w-0 shrink items-center">
-          <Logo compact className="max-w-[min(100%,240px)] sm:max-w-[280px] lg:max-w-[340px]" />
+          <Logo compact className="max-w-[min(100%,200px)] sm:max-w-[220px] lg:max-w-[200px] xl:max-w-[260px]" />
         </div>
 
         <nav
-          className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-0.5 xl:flex"
+          className="hidden items-center gap-0.5 lg:flex"
           aria-label="Primary"
         >
           {PRIMARY_NAV.map((item) => {
@@ -106,7 +133,7 @@ export function Header() {
                 >
                   <button
                     type="button"
-                    className="nav-link inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-semibold text-brand-800/85 hover:text-cta-600"
+                    className="nav-link inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-sm font-semibold text-brand-800/85 hover:text-cta-600 xl:px-3"
                     data-active={active || openMega === item.mega ? "true" : "false"}
                     aria-expanded={openMega === item.mega}
                     aria-haspopup="true"
@@ -135,9 +162,10 @@ export function Header() {
                         footerHref={item.href}
                         footerLabel={
                           item.mega === "services"
-                            ? "View all services →"
-                            : "Browse all Tamil Nadu locations →"
+                            ? "All services →"
+                            : "All locations →"
                         }
+                        top={panelTop}
                       />
                     </div>
                   ) : null}
@@ -149,7 +177,7 @@ export function Header() {
               <Link
                 key={`${item.label}-${item.href}`}
                 href={item.href}
-                className="nav-link inline-flex items-center rounded-full px-3 py-2 text-sm font-semibold"
+                className="nav-link inline-flex items-center rounded-full px-2.5 py-2 text-sm font-semibold xl:px-3"
                 data-active={active ? "true" : "false"}
                 onMouseEnter={() => setOpenMega(null)}
               >
@@ -175,7 +203,7 @@ export function Header() {
           </a>
           <a
             href={`tel:${BUSINESS_CONFIG.phone.raw}`}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-brand-800 text-white shadow-sm"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-brand-800 text-white shadow-sm lg:hidden"
             aria-label={`Call ${BUSINESS_CONFIG.phone.display}`}
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">

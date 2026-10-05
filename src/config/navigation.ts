@@ -6,13 +6,10 @@ export type NavItem = {
 };
 
 export const PRIMARY_NAV: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about/" },
-  { label: "Invisible Grills", href: "/services/invisible-grills/" },
-  { label: "Safety Nets", href: "/services/safety-nets/" },
   { label: "Services", href: "/services/", mega: "services" },
+  { label: "Areas", href: "/locations/", mega: "areas" },
   { label: "Projects", href: "/gallery/" },
-  { label: "Service Areas", href: "/locations/", mega: "areas" },
+  { label: "About", href: "/about/" },
   { label: "Contact", href: "/contact/" },
 ];
 

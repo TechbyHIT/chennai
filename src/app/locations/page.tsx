@@ -5,6 +5,7 @@ import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
+import { isChennaiBeltTown, sortChennaiRegionFirst } from "@/config/chennai-region";
 import { buildLocationPath } from "@/config/routes";
 import { SITE_CONFIG } from "@/config/site";
 import { getLocations } from "@/lib/data/repositories";
@@ -18,28 +19,31 @@ import Link from "next/link";
 
 export const revalidate = 86400;
 
+const LOCATIONS_TITLE = "Service Areas: Chennai, 150 km Belt & Tamil Nadu";
+const LOCATIONS_DESCRIPTION =
+  "Invisible grill and safety net installation across Chennai and the towns within 150 km, plus Coimbatore, Madurai, Trichy, Salem and more. Apartments and gated communities covered. Honest coverage — no fake branch offices.";
+
 export const metadata: Metadata = {
-  title: "Locations",
-  description:
-    "Tamil Nadu cities and areas served for invisible grill installation. Honest coverage — no fake branch offices.",
+  title: LOCATIONS_TITLE,
+  description: LOCATIONS_DESCRIPTION,
   alternates: { canonical: generateCanonical("/locations/") },
   openGraph: {
-    title: "Locations | Glory Invisible Grills",
-    description:
-      "Tamil Nadu cities and areas served for invisible grill installation.",
+    title: `${LOCATIONS_TITLE} | Glory Invisible Grills`,
+    description: LOCATIONS_DESCRIPTION,
     url: "/locations/",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Locations | Glory Invisible Grills",
-    description:
-      "Tamil Nadu cities and areas served for invisible grill installation.",
+    title: `${LOCATIONS_TITLE} | Glory Invisible Grills`,
+    description: LOCATIONS_DESCRIPTION,
   },
 };
 
 export default function LocationsIndexPage() {
-  const locations = getLocations({ publishedOnly: true, servedOnly: true });
+  const locations = sortChennaiRegionFirst(
+    getLocations({ publishedOnly: true, servedOnly: true }),
+  );
   const photos = getHomepageGallery(6);
 
   return (
@@ -67,10 +71,12 @@ export default function LocationsIndexPage() {
             ]}
           />
           <div className="max-w-3xl space-y-4">
-            <Heading as="h1">Locations in Tamil Nadu</Heading>
+            <Heading as="h1">Locations: Chennai, its 150 km belt and Tamil Nadu</Heading>
             <p className="leading-8 text-ink-700">
-              Coimbatore is our primary hub — with coverage across Tamil Nadu cities and towns where
-              we can genuinely measure and install. Browse a city to open area and service pages.
+              Chennai and the towns within about 150 km are our main service region, followed by
+              Coimbatore and the major Tamil Nadu cities where we can genuinely measure and install.
+              Apartments and gated communities — ready-to-move and under-construction — are covered
+              across the region. Browse a city to open area and service pages.
             </p>
           </div>
           <ImageGallery images={photos} columns="3" title="Work across Tamil Nadu" />
@@ -94,7 +100,11 @@ export default function LocationsIndexPage() {
                 </div>
                 <div className="p-5">
                   <h2 className="font-display text-xl text-brand-900">{location.name}</h2>
-                  <p className="mt-2 text-sm text-brand-700">{location.district}</p>
+                  <p className="mt-2 text-sm text-brand-700">
+                    {isChennaiBeltTown(location.slug)
+                      ? `${location.district} · near Chennai`
+                      : location.district}
+                  </p>
                   <p className="mt-3 text-sm leading-7 text-ink-700">{location.introduction}</p>
                 </div>
               </Link>

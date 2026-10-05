@@ -4,6 +4,7 @@ import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
+import { isMainService, sortMainServicesFirst } from "@/config/main-services";
 import { buildServicePath } from "@/config/routes";
 import { SITE_CONFIG } from "@/config/site";
 import { getServices } from "@/lib/data/repositories";
@@ -15,28 +16,29 @@ import Link from "next/link";
 
 export const revalidate = 86400;
 
+const SERVICES_TITLE = "Invisible Grills, Safety Nets & Sports Nets";
+const SERVICES_DESCRIPTION =
+  "Invisible grills, all types of safety nets, cloth hangers, sports nets and bird spikes across Tamil Nadu - measured installation for apartments and homes.";
+
 export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Invisible grill, safety net, mosquito net and home protection services across Tamil Nadu — measured installation for apartments and homes.",
+  title: SERVICES_TITLE,
+  description: SERVICES_DESCRIPTION,
   alternates: { canonical: generateCanonical("/services/") },
   openGraph: {
-    title: "Services | Glory Invisible Grills",
-    description:
-      "Invisible grill, safety net, mosquito net and home protection services across Tamil Nadu.",
+    title: `${SERVICES_TITLE} | Glory Invisible Grills`,
+    description: SERVICES_DESCRIPTION,
     url: "/services/",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Services | Glory Invisible Grills",
-    description:
-      "Invisible grill, safety net, mosquito net and home protection services across Tamil Nadu.",
+    title: `${SERVICES_TITLE} | Glory Invisible Grills`,
+    description: SERVICES_DESCRIPTION,
   },
 };
 
 export default function ServicesIndexPage() {
-  const services = getServices({ publishedOnly: true });
+  const services = sortMainServicesFirst(getServices({ publishedOnly: true }));
 
   return (
     <>
@@ -45,7 +47,7 @@ export default function ServicesIndexPage() {
           collectionPageSchema({
             name: "Glory Invisible Grills services",
             description:
-              "Installation services for invisible grills, safety nets, bird nets and related home protection across Tamil Nadu.",
+              "Installation services for invisible grills, safety nets, cloth hangers, sports nets, bird spikes and related home protection across Tamil Nadu.",
             url: `${SITE_CONFIG.url}/services/`,
             items: services.map((service) => ({
               name: service.name,
@@ -63,10 +65,12 @@ export default function ServicesIndexPage() {
             ]}
           />
           <div className="max-w-3xl space-y-4">
-            <Heading as="h1">Services</Heading>
+            <Heading as="h1">Invisible Grills, Safety Nets, Cloth Hangers, Sports Nets &amp; Bird Spikes</Heading>
             <p className="leading-8 text-ink-700">
-              Explore invisible grill and safety solutions for balconies, windows and sit-outs across
-              Chennai and served Tamil Nadu cities — each with real installation photography.
+              Our five core services come first below: invisible grills, every type of safety net,
+              cloth hangers, sports nets and bird spikes. Explore the full range for balconies,
+              windows, terraces and practice areas across Chennai and served Tamil Nadu cities — each
+              with real installation photography.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -86,6 +90,11 @@ export default function ServicesIndexPage() {
                   />
                 </div>
                 <div className="p-5">
+                  {isMainService(service.slug) ? (
+                    <p className="mb-2 inline-block rounded-full bg-cta-500/10 px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-cta-600">
+                      Core service
+                    </p>
+                  ) : null}
                   <h2 className="font-display text-xl text-brand-900">{service.name}</h2>
                   <p className="mt-3 text-sm leading-7 text-ink-700">{service.summary}</p>
                 </div>

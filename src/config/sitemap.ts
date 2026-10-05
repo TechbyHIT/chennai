@@ -23,8 +23,8 @@ export const SITEMAP_CONFIG = {
   ] as const,
 
   /**
-   * Include service×area URLs for every curated (seed) locality,
-   * not only Chennai / Coimbatore priority lists.
+   * Include service×area URLs for Chennai / Coimbatore priority localities
+   * (high-intent corridors). Other seed localities stay on-demand, not sitemapped.
    */
   includePriorityServiceAreas: true,
 

@@ -8,8 +8,8 @@ import type { Service } from "@/types/service";
 
 const FEATURED_SLUGS = [
   "invisible-grills",
+  "window-invisible-grills",
   "balcony-safety-nets",
-  "mosquito-nets",
   "bird-nets",
   "monkey-nets",
   "children-safety-nets",

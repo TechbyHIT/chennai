@@ -10,7 +10,7 @@ const TRUST = [
   "Free site inspection",
   "Measured, written quotes",
   "SS316 / SS304 discussed openly",
-  "Serving customers across Tamil Nadu",
+  "Chennai + 150 km, Coimbatore & major TN cities",
 ];
 
 export type HomeHeroStats = {
@@ -22,9 +22,25 @@ export type HomeHeroStats = {
 export function HomeHero({
   heroSrc = "/images/homepage/glory-home-01.png",
   stats,
+  kicker,
+  title,
+  titleAccent,
+  lead,
+  trust = TRUST,
+  heroAlt,
+  quoteHref = "/#contact",
+  statCards,
 }: {
   heroSrc?: string;
   stats: HomeHeroStats;
+  kicker?: string;
+  title?: React.ReactNode;
+  titleAccent?: React.ReactNode;
+  lead?: string;
+  trust?: string[];
+  heroAlt?: string;
+  quoteHref?: string;
+  statCards?: Array<{ label: string; value: string }>;
 }) {
   const reduceMotion = useReducedMotion();
 
@@ -32,7 +48,10 @@ export function HomeHero({
     <section className="relative min-h-[88svh] overflow-hidden sm:min-h-[92svh]">
       <SafeImage
         src={heroSrc}
-        alt={`${BUSINESS_CONFIG.name} premium invisible grill installation in Tamil Nadu`}
+        alt={
+          heroAlt ??
+          `${BUSINESS_CONFIG.name} premium invisible grill installation in Chennai, Tamil Nadu`
+        }
         fill
         priority
         sizes="100vw"
@@ -55,18 +74,24 @@ export function HomeHero({
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="inline-flex items-center gap-2 rounded-full bg-cta-500 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-brand-900">
-            {BUSINESS_CONFIG.name} · Tamil Nadu
+            {kicker ?? `${BUSINESS_CONFIG.name} · Chennai & Tamil Nadu`}
           </p>
-          <h1 className="text-hero font-display font-extrabold leading-[1.05] text-white">
-            Premium Invisible Grills
-            <span className="mt-2 block text-cta-500">Across Tamil Nadu</span>
+          <h1 className="text-hero font-display font-extrabold leading-[1.05] text-white" data-speakable>
+            {title ?? (
+              <>
+                Invisible Grills &amp; Safety Nets
+                <span className="mt-2 block text-cta-500">
+                  {titleAccent ?? "in Chennai & Across Tamil Nadu"}
+                </span>
+              </>
+            )}
           </h1>
-          <p className="max-w-2xl text-lg leading-8 text-white/90 sm:text-xl">
-            Elegant safety solutions for balconies, windows, apartments, villas and modern
-            homes — measured on site, quoted in writing, finished with care.
+          <p className="max-w-2xl text-lg leading-8 text-white/90 sm:text-xl" data-speakable>
+            {lead ??
+              "Elegant safety solutions for balconies, windows, apartments, villas and modern homes — measured on site, quoted in writing, finished with care."}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button href="/#contact" size="lg">
+            <Button href={quoteHref} size="lg">
               Get Free Quote
             </Button>
             <Button
@@ -100,7 +125,7 @@ export function HomeHero({
         </motion.div>
 
         <ul className="mt-8 flex flex-wrap gap-2">
-          {TRUST.map((item) => (
+          {trust.map((item) => (
             <li
               key={item}
               className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur sm:text-sm"
@@ -114,14 +139,16 @@ export function HomeHero({
         </ul>
 
         <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          {[
-            { label: "Installation systems", value: `${stats.services} services` },
-            { label: "Cities covered", value: `${stats.cities} Tamil Nadu cities` },
-            {
-              label: "Local pages",
-              value: `${stats.localities.toLocaleString("en-IN")}+ localities`,
-            },
-          ].map((card) => (
+          {(
+            statCards ?? [
+              { label: "Installation systems", value: `${stats.services} services` },
+              { label: "Cities covered", value: `${stats.cities} Tamil Nadu cities` },
+              {
+                label: "Local pages",
+                value: `${stats.localities.toLocaleString("en-IN")}+ localities`,
+              },
+            ]
+          ).map((card) => (
             <div
               key={card.label}
               className="rounded-2xl border border-white/15 bg-white/10 p-4 text-white backdrop-blur"

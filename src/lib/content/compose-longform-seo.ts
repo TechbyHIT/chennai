@@ -84,7 +84,7 @@ export function composeLongformSeo(input: {
   const coastal =
     [...traits, ...facts].join(" ").toLowerCase().includes("coastal") ||
     city.slug === "chennai" ||
-    city.slug === "thoothukudi";
+    city.slug === "mahabalipuram";
 
   const svc = service.name;
   const short = service.shortName;

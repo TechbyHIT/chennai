@@ -36,6 +36,58 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: "inline",
   },
+  // Mosquito nets was retired as a service. Every URL shape it used to generate
+  // is sent to the closest safety-net equivalent. Order matters: the specific
+  // prefixes must win before the generic legacy /{city}/{service}/ patterns.
+  async redirects() {
+    return [
+      {
+        source: "/services/mosquito-nets",
+        destination: "/services/safety-nets/",
+        permanent: true,
+      },
+      {
+        source: "/mosquito-nets-in-:city",
+        destination: "/safety-nets-in-:city/",
+        permanent: true,
+      },
+      {
+        source: "/mosquito-nets",
+        destination: "/services/safety-nets/",
+        permanent: true,
+      },
+      {
+        source: "/mosquito-nets/:path*",
+        destination: "/safety-nets/:path*/",
+        permanent: true,
+      },
+      {
+        source: "/property-types/:propertyType/mosquito-nets",
+        destination: "/property-types/:propertyType/safety-nets/",
+        permanent: true,
+      },
+      {
+        source: "/guides/mosquito-nets-vs-balcony-safety-nets",
+        destination: "/guides/invisible-grills-vs-safety-nets/",
+        permanent: true,
+      },
+      {
+        source: "/solutions/mosquito-entry-on-balconies",
+        destination: "/solutions/",
+        permanent: true,
+      },
+      {
+        source: "/:city/:area/mosquito-nets",
+        destination: "/safety-nets/tamil-nadu/:city/:area/",
+        permanent: true,
+      },
+      {
+        source: "/:city/mosquito-nets",
+        destination: "/safety-nets-in-:city/",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

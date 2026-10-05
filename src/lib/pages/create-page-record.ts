@@ -1,5 +1,7 @@
 import { BUSINESS_CONFIG } from "@/config/business";
 import { INDEX_IF_CONFIG } from "@/config/index-if";
+import { isChennaiBeltTown, isChennaiRegion } from "@/config/chennai-region";
+import { getMainService } from "@/config/main-services";
 import { SEO_CONFIG } from "@/config/seo";
 import {
   buildAreaPath,
@@ -122,27 +124,32 @@ function makePage(input: {
 
 export function createServicePage(service: Service): PageRecord {
   const path = buildServicePath(service.slug);
-  const title = generateTitle({
-    pageType: "service",
-    serviceName: service.name,
-    locationName: "Tamil Nadu",
-  });
+  const pillar = getMainService(service.slug);
+  const title =
+    pillar?.seoTitle ??
+    generateTitle({
+      pageType: "service",
+      serviceName: service.name,
+      locationName: "Tamil Nadu",
+    });
   return makePage({
     id: `page-service-${service.id}`,
     path,
     slug: service.slug,
     pageType: "service",
     title,
-    metaDescription: generateDescription({
-      pageType: "service",
-      serviceName: service.name,
-      summary: service.summary,
-    }),
+    metaDescription:
+      pillar?.seoDescription ??
+      generateDescription({
+        pageType: "service",
+        serviceName: service.name,
+        summary: service.summary,
+      }),
     h1: `${service.name} Installation in Tamil Nadu`,
     introduction: service.introduction,
     searchIntent: `${service.name} installation Tamil Nadu`,
     qualityScore: service.qualityScore,
-    crawlPriority: "high",
+    crawlPriority: pillar ? "critical" : "high",
     sitemapGroup: "services",
     serviceId: service.id,
     localDataVerified: true,
@@ -151,12 +158,20 @@ export function createServicePage(service: Service): PageRecord {
 
 export function createLocationPage(location: Location): PageRecord {
   const path = buildLocationPath(location.slug);
+  const inRegion = isChennaiRegion(location.slug);
+  // Belt towns carry "Chennai" in the title so they rank for "near Chennai"
+  // intent; the hub itself and other cities keep the state qualifier.
+  const title = isChennaiBeltTown(location.slug)
+    ? `Invisible Grills & Safety Nets in ${location.name}, Chennai`
+    : inRegion
+      ? `Invisible Grills & Safety Nets in ${location.name}`
+      : `Invisible Grills in ${location.name} | Tamil Nadu`;
   return makePage({
     id: `page-location-${location.id}`,
     path,
     slug: location.slug,
     pageType: "location",
-    title: `Invisible Grills in ${location.name} | Tamil Nadu`,
+    title,
     metaDescription: generateDescription({
       pageType: "location",
       locationName: location.name,
@@ -166,7 +181,7 @@ export function createLocationPage(location: Location): PageRecord {
     introduction: location.introduction,
     searchIntent: `invisible grills ${location.name}`,
     qualityScore: location.qualityScore,
-    crawlPriority: "high",
+    crawlPriority: inRegion ? "critical" : "high",
     sitemapGroup: "locations",
     locationId: location.id,
     localDataVerified: location.localDataVerified,
@@ -221,7 +236,7 @@ export function createServiceLocationPage(
     introduction: `${service.introduction} In ${location.name}, ${location.localDescription} Housing commonly includes ${(location.propertyTypes ?? []).slice(0, 3).join(", ") || "apartments and homes"}.`,
     searchIntent: `${service.name} ${location.name}`,
     qualityScore,
-    crawlPriority: "high",
+    crawlPriority: isChennaiRegion(location.slug) ? "critical" : "high",
     sitemapGroup: "service-location",
     serviceId: service.id,
     locationId: location.id,
@@ -274,8 +289,11 @@ export function createServiceAreaPage(
       return Math.max(base, isPriority ? 86 : 82);
     })(),
     crawlPriority:
-      CHENNAI_PRIORITY_AREA_SLUGS.has(area.slug) ||
-      COIMBATORE_PRIORITY_AREA_SLUGS.has(area.slug)
+      // Every curated locality in the Chennai belt towns is a priority page;
+      // in Chennai and Coimbatore themselves only the named corridors are.
+      (location.slug === "chennai" && CHENNAI_PRIORITY_AREA_SLUGS.has(area.slug)) ||
+      (location.slug === "coimbatore" && COIMBATORE_PRIORITY_AREA_SLUGS.has(area.slug)) ||
+      isChennaiBeltTown(location.slug)
         ? "high"
         : "medium",
     sitemapGroup: "service-area",

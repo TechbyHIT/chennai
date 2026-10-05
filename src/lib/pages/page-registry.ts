@@ -1,3 +1,4 @@
+import { isChennaiRegion } from "@/config/chennai-region";
 import {
   getAreas,
   getBlogPosts,
@@ -270,7 +271,7 @@ export function* iterateServiceAreaUrls(): Generator<{
         locationId: parent.id,
         areaId: area.id,
         priority:
-          parent.slug === "coimbatore" || parent.slug === "chennai"
+          isChennaiRegion(parent.slug) || parent.slug === "coimbatore"
             ? "high"
             : "normal",
       };

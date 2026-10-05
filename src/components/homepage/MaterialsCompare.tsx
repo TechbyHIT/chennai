@@ -17,12 +17,6 @@ const ROWS = [
     bestFor: "Pigeon roosting & primate intrusion",
     note: "Different strength/use than child fall nets",
   },
-  {
-    name: "Mosquito nets",
-    view: "Fine insect mesh",
-    bestFor: "Windows & ventilators",
-    note: "Not a substitute for fall protection",
-  },
 ];
 
 export function MaterialsCompare() {

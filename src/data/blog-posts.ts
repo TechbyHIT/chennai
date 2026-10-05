@@ -78,8 +78,8 @@ Before you book, list the openings, note child or pet needs, and ask for a measu
     `.trim(),
     category: "Buying Guides",
     author: "Glory Content Team",
-    relatedServiceIds: ["svc-invisible-grills", "svc-balcony-safety-nets", "svc-mosquito-nets"],
-    relatedGuideIds: ["guide-invisible-vs-safety-nets", "guide-mosquito-vs-safety"],
+    relatedServiceIds: ["svc-invisible-grills", "svc-balcony-safety-nets", "svc-bird-nets"],
+    relatedGuideIds: ["guide-invisible-vs-safety-nets", "guide-child-balcony-checklist"],
     faq: [
       {
         question: "Is a photo quote enough in Chennai?",

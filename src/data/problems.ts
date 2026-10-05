@@ -106,24 +106,6 @@ export const PROBLEMS: Problem[] = [
     qualityScore: 82,
   },
   {
-    id: "prob-mosquito-entry",
-    slug: "mosquito-entry-on-balconies",
-    name: "Mosquito Entry on Balconies",
-    summary:
-      "Evenings on Tamil Nadu balconies often mean insect pressure through open railings and windows.",
-    detailedDescription:
-      "Mosquito nets help when insect screening is the real goal. If fall protection is also needed, plan safety nets or invisible grills as a separate system so the household does not buy the wrong product.",
-    relatedServiceIds: ["svc-mosquito-nets", "svc-balcony-safety-nets"],
-    customerQuestions: [
-      "Are mosquito nets enough for child balcony safety?",
-      "Can mosquito nets be fitted on existing windows?",
-    ],
-    publicationStatus: "published",
-    allowIndexing: true,
-    contentReviewed: true,
-    qualityScore: 88,
-  },
-  {
     id: "prob-monkey-intrusion",
     slug: "monkey-intrusion-around-homes",
     name: "Monkey Intrusion Around Homes",

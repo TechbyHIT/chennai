@@ -33,7 +33,7 @@ export default function MaterialsGuidePage() {
             <Heading as="h1">Materials guide</Heading>
             <p className="leading-8 text-ink-700">
               Invisible grill performance depends on cable grade, protective coating, frame quality
-              and fixing hardware. In coastal cities such as Chennai and Thoothukudi, humidity and
+              and fixing hardware. In coastal areas such as Chennai and Mahabalipuram, humidity and
               salt exposure make material choices especially important.
             </p>
           </div>

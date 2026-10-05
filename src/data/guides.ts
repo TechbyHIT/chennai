@@ -10,7 +10,7 @@ export const GUIDES: Guide[] = [
     content: `
 Invisible grill performance depends on material grade, coating quality and fixing method. Stainless steel cables are commonly used because they combine tensile strength with corrosion resistance. Nylon coating helps improve touch comfort and visual consistency.
 
-In coastal cities such as Chennai and Thoothukudi, humidity and salt-laden air make material selection more important. Ask for clear details on cable grade, coating thickness expectations and fastener quality. Avoid decisions based only on the lowest quote.
+In coastal areas such as Chennai and Mahabalipuram, humidity and salt-laden air make material selection more important. Ask for clear details on cable grade, coating thickness expectations and fastener quality. Avoid decisions based only on the lowest quote.
 
 Frame and bracket quality also matter. A strong cable system can underperform if terminations are weak or poorly aligned. During a site visit, discuss how the system will fix to concrete, masonry or metal railings and what maintenance looks like over time.
 
@@ -195,36 +195,6 @@ If you also need child or pet fall protection, discuss that as a separate intent
     contentReviewed: true,
     qualityScore: 89,
     wordCount: 1350,
-    author: "Glory Content Team",
-    reviewedAt: "2026-08-02",
-    updatedAt: "2026-08-02",
-  },
-  {
-    id: "guide-mosquito-vs-safety",
-    slug: "mosquito-nets-vs-balcony-safety-nets",
-    title: "Mosquito Nets vs Balcony Safety Nets",
-    summary:
-      "Why insect screening and fall protection should not be bought as if they were the same product.",
-    content: `
-Mosquito nets are designed for insect screening. Balcony safety nets are specified for fall-risk reduction and denser edge coverage. Confusing the two is one of the most common buying mistakes in apartment searches.
-
-If insects are the only problem, mosquito nets may be enough for windows or select openings. If children, pets or open high-rise edges are the concern, ask for safety nets or invisible grills with spacing matched to that risk.
-
-A measurement visit keeps the recommendation practical for Tamil Nadu apartments where humidity, monsoon splash and balcony furniture all affect how an opening is used.
-    `.trim(),
-    relatedServiceIds: ["svc-mosquito-nets", "svc-balcony-safety-nets", "svc-safety-nets"],
-    faq: [
-      {
-        question: "Can one product do both jobs?",
-        answer:
-          "Sometimes openings need different systems. Do not assume insect mesh alone provides fall protection.",
-      },
-    ],
-    publicationStatus: "published",
-    allowIndexing: true,
-    contentReviewed: true,
-    qualityScore: 90,
-    wordCount: 1300,
     author: "Glory Content Team",
     reviewedAt: "2026-08-02",
     updatedAt: "2026-08-02",

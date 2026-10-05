@@ -1,5 +1,7 @@
 import { BUSINESS_CONFIG } from "@/config/business";
+import { CHENNAI_REGION_SLUGS } from "@/config/chennai-region";
 import { SITE_CONFIG } from "@/config/site";
+import { getLocationBySlug } from "@/lib/data/repositories";
 
 function openingHoursSpecification() {
   // Honest hours from business config — no fabricated 24/7 claims.
@@ -37,11 +39,21 @@ export function localBusinessSchema() {
     telephone: BUSINESS_CONFIG.phone.raw,
     image: `${BUSINESS_CONFIG.websiteUrl}${BUSINESS_CONFIG.defaultOpenGraphImage}`,
     priceRange: "$$",
-    areaServed: {
-      "@type": "State",
-      name: "Tamil Nadu",
-      containedInPlace: { "@type": "Country", name: "India" },
-    },
+    // Chennai region first (primary focus), then the state as the outer bound.
+    areaServed: [
+      ...CHENNAI_REGION_SLUGS.map((slug) => getLocationBySlug(slug))
+        .filter((loc): loc is NonNullable<typeof loc> => Boolean(loc))
+        .map((loc) => ({
+          "@type": "City",
+          name: loc.name,
+          containedInPlace: { "@type": "State", name: "Tamil Nadu" },
+        })),
+      {
+        "@type": "State",
+        name: "Tamil Nadu",
+        containedInPlace: { "@type": "Country", name: "India" },
+      },
+    ],
     address: {
       "@type": "PostalAddress",
       ...(streetIsPlaceholder

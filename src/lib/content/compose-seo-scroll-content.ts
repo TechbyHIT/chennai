@@ -247,14 +247,13 @@ export function composeSeoScrollContent(input: {
       ),
       lead: "Search language overlaps. Product jobs do not.",
       paragraphs: [
-        `People searching near ${placeFull} often mix invisible grills, safety nets, mosquito nets, bird nets and cloth hangers. Matching intent prevents rework.`,
+        `People searching near ${placeFull} often mix invisible grills, safety nets, bird nets and cloth hangers. Matching intent prevents rework.`,
         `${service.name} should be chosen when its job matches your opening. Use the related-service links on this page to explore alternatives without leaving the ${city.name} cluster.`,
       ],
       bullets: rotate(
         [
           "Invisible grills → discreet fall-risk coverage",
           "Safety nets → denser mesh edge protection",
-          "Mosquito nets → insect screening only",
           "Bird nets / spikes → roosting exclusion or deterrence",
           "Monkey nets → intrusion exclusion where relevant",
           "Cloth hangers → drying utility, not fall protection",

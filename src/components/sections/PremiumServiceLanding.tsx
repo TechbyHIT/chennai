@@ -1,12 +1,23 @@
+import { AboutIntro } from "@/components/homepage/AboutIntro";
+import { HomeHero } from "@/components/homepage/HomeHero";
+import { HomeQuote } from "@/components/homepage/HomeQuote";
+import { TrustReviews } from "@/components/homepage/TrustReviews";
+import { WhyChooseUs } from "@/components/homepage/WhyChooseUs";
+import { QuoteForm } from "@/components/forms/QuoteForm";
+import { ImageGallery } from "@/components/media/ImageGallery";
+import { CtaBanner } from "@/components/sections/CtaBanner";
+import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import { textPoints } from "@/components/sections/PlacePage";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { QuoteFormLoader } from "@/components/forms/QuoteFormLoader";
-import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { Heading } from "@/components/ui/Heading";
+import { Section } from "@/components/ui/Section";
 import { BUSINESS_CONFIG } from "@/config/business";
 import { buildServicePath } from "@/config/routes";
 import type { PremiumLandingModel } from "@/lib/content/build-premium-landing";
+import { getLocations, getServices } from "@/lib/data/repositories";
 import { buildServiceInCityPath } from "@/lib/routing/service-location-urls";
 import { evaluateLandingIndexIf } from "@/lib/seo/index-if-gate";
 import { faqSchema } from "@/lib/schema/faq-schema";
@@ -15,8 +26,45 @@ import { organizationSchema } from "@/lib/schema/organization-schema";
 import { serviceSchema } from "@/lib/schema/service-schema";
 import { webPageSchema } from "@/lib/schema/web-page-schema";
 import { howToSchema, speakableSchema } from "@/lib/schema/website-schema";
-import Image from "next/image";
 import Link from "next/link";
+
+function LandingHeader({
+  eyebrow,
+  title,
+  lead,
+}: {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+}) {
+  return (
+    <div className="max-w-2xl space-y-3">
+      <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-500">
+        <span className="h-px w-8 bg-cta-500" aria-hidden="true" />
+        {eyebrow}
+      </p>
+      <Heading as="h2" className="text-3xl sm:text-4xl">
+        {title}
+      </Heading>
+      {lead ? <p className="text-base leading-7 text-ink-500">{lead}</p> : null}
+    </div>
+  );
+}
+
+function CheckList({ items }: { items: string[] }) {
+  return (
+    <ul className="grid gap-2.5 sm:grid-cols-2">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-2.5 text-sm leading-6 text-ink-700">
+          <span className="mt-0.5 text-cta-500" aria-hidden="true">
+            ✓
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function PremiumServiceLanding({ model }: { model: PremiumLandingModel }) {
   const { service, seo, city, area, localCopy } = model;
@@ -79,7 +127,7 @@ export function PremiumServiceLanding({ model }: { model: PremiumLandingModel })
       locationId: city.id,
       areaId: area?.id,
     }),
-    serviceSchema(service, seo.canonicalUrl),
+    serviceSchema(service, seo.canonicalUrl, { location: city, area }),
     // BreadcrumbList is emitted by <Breadcrumbs /> — do not duplicate here.
     faqSchema(model.faqs),
     speakableSchema(seo.canonicalUrl),
@@ -94,398 +142,501 @@ export function PremiumServiceLanding({ model }: { model: PremiumLandingModel })
     }),
   ];
 
+  const galleryImages = model.galleryImages.slice(0, 8);
+  const galleryAlts = galleryImages.map(
+    (src, index) =>
+      model.galleryAlts[index] ?? `${service.name} in ${model.placeLabel} — photo ${index + 1}`,
+  );
+  const heroImage = model.galleryImages[0] ?? service.heroImage;
+  const heroAlt =
+    model.galleryAlts[0] ?? `${service.name} installation in ${model.placeLabel}, Tamil Nadu`;
+
+  const formServices = getServices({ publishedOnly: true }).map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+  const formLocations = getLocations({ publishedOnly: true, servedOnly: true }).map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const directoryGroups = [
+    {
+      heading: `${service.shortName} in nearby ${city.name} areas`,
+      pills: model.nearbyAreas,
+    },
+    {
+      heading: `All ${service.shortName} areas in ${city.name}`,
+      pills: model.serviceAreas,
+    },
+    {
+      heading: `Other services in ${model.placeLabel}`,
+      pills: model.relatedServices,
+    },
+    {
+      heading: `${service.shortName} in other cities`,
+      pills: model.relatedCities,
+    },
+    {
+      heading: "Guides and solutions",
+      pills: [...model.relatedGuides, ...model.relatedSolutions],
+    },
+    {
+      heading: `Related ${service.shortName} searches`,
+      pills: model.searchVariants,
+    },
+  ].filter((group) => group.pills.length > 0);
+
   return (
-    <article className="fg-page">
+    <article>
       <JsonLd data={schemas} />
-
-      <Container className="fg-shell">
-        <div className="fg-main">
+      <div className="bg-white">
+        <Container className="pt-5">
           <Breadcrumbs items={model.breadcrumbs} />
+        </Container>
+      </div>
 
-          <header className="fg-hero">
-            <h1 className="fg-h1" data-speakable>
-              {seo.h1}
-            </h1>
-            <p className="fg-hero__lead" data-speakable>
-              {localCopy.heroLead}
-            </p>
+      <HomeHero
+        heroSrc={heroImage}
+        stats={{ services: 0, cities: 0, localities: 0 }}
+        statCards={[
+          { label: "Nearby areas", value: `${model.nearbyAreas.length} localities` },
+          { label: "FAQ answers", value: `${model.faqs.length} questions` },
+          {
+            label: "Complete guide",
+            value: `~${model.longform.wordCount.toLocaleString("en-IN")} words`,
+          },
+        ]}
+        kicker={`Glory Grills · ${model.placeLabelFull}`}
+        title={seo.h1}
+        lead={localCopy.heroLead}
+        trust={localCopy.trustBadges}
+        heroAlt={heroAlt}
+        quoteHref="#quote"
+      />
 
-            <ul className="fg-trust-row">
-              {localCopy.trustBadges.map((badge) => (
-                <li key={badge}>{badge}</li>
-              ))}
-            </ul>
-
-            <div className="fg-hero__actions">
-              <Button href={`tel:${BUSINESS_CONFIG.phone.raw}`} external>
-                Call Now: {BUSINESS_CONFIG.phone.display}
-              </Button>
-              <Button
-                href={`https://wa.me/${BUSINESS_CONFIG.whatsapp.raw}`}
-                variant="secondary"
-                external
-              >
-                WhatsApp Us
-              </Button>
-            </div>
-
-            <p className="fg-city-line">
-              {localCopy.cityGuideLine}{" "}
-              <Link href={buildServiceInCityPath(service.slug, city.slug)}>
-                View {city.name} service guide
-              </Link>{" "}
-              or call{" "}
-              <a href={`tel:${BUSINESS_CONFIG.phone.raw}`}>{BUSINESS_CONFIG.phone.display}</a> for a
-              free site visit in {model.placeLabel}.
-            </p>
-          </header>
-
-          <nav className="fg-toc" aria-label="Table of contents">
-            <h2 className="fg-toc__title">Table of Contents</h2>
-            <ol className="fg-toc__list">
+      <Section>
+        <Container className="space-y-6">
+          <nav aria-label="Table of contents">
+            <div className="flex flex-wrap gap-2">
               {model.jumpNav.map((item) => (
-                <li key={item.id}>
-                  <a href={`#${item.id}`}>
-                    <span>{item.number}</span>
-                    {item.label}
-                  </a>
-                </li>
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:border-brand-300"
+                >
+                  <span aria-hidden="true" className="text-cta-500">
+                    {item.number}
+                  </span>
+                  {item.label}
+                </a>
               ))}
-            </ol>
+            </div>
           </nav>
+          <p className="text-sm leading-7 text-ink-500">
+            {localCopy.cityGuideLine}{" "}
+            <Link
+              href={buildServiceInCityPath(service.slug, city.slug)}
+              className="font-semibold text-brand-500 hover:text-brand-600"
+            >
+              View {city.name} service guide
+            </Link>{" "}
+            or call{" "}
+            <a
+              href={`tel:${BUSINESS_CONFIG.phone.raw}`}
+              className="font-semibold text-brand-500 hover:text-brand-600"
+            >
+              {BUSINESS_CONFIG.phone.display}
+            </a>{" "}
+            for a free site visit in {model.placeLabel}.
+          </p>
+        </Container>
+      </Section>
 
-          <section id="gallery" className="fg-section">
-            <h2 className="fg-h2">
-              {service.name} Installation Photos in {model.placeLabel}
-            </h2>
-            <p className="fg-muted">
-              Browse recent {service.name.toLowerCase()} project photos relevant to homes in{" "}
-              {model.placeLabel}, {city.name}.
+      <Section id="gallery" className="bg-white scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Our work"
+            title={`${service.name} Installation Photos in ${model.placeLabel}`}
+            lead={`Browse recent ${service.name.toLowerCase()} project photos relevant to homes in ${model.placeLabel}, ${city.name}.`}
+          />
+          {galleryImages.length > 0 ? (
+            <ImageGallery images={galleryImages} alts={galleryAlts} columns="4" priorityCount={1} />
+          ) : null}
+        </Container>
+      </Section>
+
+      <Section id="quote-top" className="scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Free quote"
+            title={`Get Free Quote for ${service.name} in ${model.placeLabel}`}
+            lead={`Fill the form below and our team will help schedule a free assessment for ${model.placeLabel}.`}
+          />
+          <div className="premium-card p-5 sm:p-8">
+            <QuoteForm services={formServices} locations={formLocations} />
+          </div>
+        </Container>
+      </Section>
+
+      <Section id="pricing" className="bg-white scroll-mt-28">
+        <Container className="space-y-8">
+          <LandingHeader
+            eyebrow="Pricing"
+            title={`${service.name} Price in ${model.placeLabel}`}
+            lead="Honest pricing approach — every estimate follows a free site measurement."
+          />
+          <div className="premium-card gradient-border space-y-3 p-6 sm:p-8">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-500">
+              Honest pricing approach
             </p>
-            {model.galleryImages.length > 0 ? (
-              <div className="fg-gallery">
-                {model.galleryImages.slice(0, 8).map((src, index) => (
-                  <figure key={`${src}-${index}`}>
-                    <Image
-                      src={src}
-                      alt={model.galleryAlts[index] ?? `${service.name} in ${model.placeLabel}`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      className="object-cover"
-                    />
-                  </figure>
-                ))}
-              </div>
-            ) : null}
-          </section>
-
-          <section id="quote-top" className="fg-section fg-quote-card">
-            <h2 className="fg-h2">
-              Get Free Quote for {service.name} in {model.placeLabel}
-            </h2>
-            <p className="fg-muted">
-              Fill the form below and our team will help schedule a free assessment for{" "}
-              {model.placeLabel}.
+            <p className="font-display text-2xl text-brand-900 sm:text-3xl">
+              Quote after measurement
             </p>
-            <QuoteFormLoader />
-          </section>
+            <p className="max-w-3xl text-sm leading-7 text-ink-600">{model.pricingStatement}</p>
+          </div>
+          <CheckList items={model.pricingFactors} />
+          <div className="space-y-4">
+            <h3 className="font-display text-xl text-brand-900 sm:text-2xl">
+              Customer reviews from {model.placeLabel}
+            </h3>
+            <p className="max-w-3xl text-sm leading-7 text-ink-500">
+              Real customer reviews will appear here once written permission is available. We do
+              not publish fake star ratings, AggregateRating schema or fabricated testimonials.
+            </p>
+            <TrustReviews />
+          </div>
+        </Container>
+      </Section>
 
-          <section id="pricing" className="fg-section">
-            <h2 className="fg-h2">
-              {service.name} Price in {model.placeLabel}
-            </h2>
-            <div className="fg-price-box">
-              <p className="fg-price-box__label">Honest pricing approach</p>
-              <p className="fg-price-box__value">Quote after measurement</p>
-              <p className="fg-price-box__note">{model.pricingStatement}</p>
-            </div>
-            <ul className="fg-check-grid">
-              {model.pricingFactors.map((factor) => (
-                <li key={factor}>{factor}</li>
-              ))}
-            </ul>
-
-            <div className="fg-review-box">
-              <h3 className="fg-h3">Customer reviews from {model.placeLabel}</h3>
-              <p>
-                Real customer reviews will appear here once written permission is available. We do
-                not publish fake star ratings, AggregateRating schema or fabricated testimonials.
-              </p>
-            </div>
-          </section>
-
-          <section id="about" className="fg-section">
-            <h2 className="fg-h2">{localCopy.aboutTitle}</h2>
+      <AboutIntro
+        imageSrc={model.galleryImages[1] ?? heroImage}
+        secondarySrc={model.galleryImages[2] ?? heroImage}
+        eyebrow={`About ${service.shortName} in ${model.placeLabel}`}
+        title={localCopy.aboutTitle}
+        body={
+          <>
             {localCopy.aboutParagraphs.map((paragraph) => (
-              <p key={paragraph.slice(0, 48)} className="fg-prose">
+              <p key={paragraph.slice(0, 48)} className="text-base leading-8 text-ink-700">
                 {paragraph}
               </p>
             ))}
-            <p className="fg-prose">{model.introduction}</p>
-          </section>
+            <p className="text-base leading-8 text-ink-700">{model.introduction}</p>
+          </>
+        }
+        pillars={textPoints(model.placeLabel, localCopy.whyChoose)}
+        imageAlt={`${service.name} installation in ${model.placeLabel}`}
+        secondaryAlt={`${service.name} balcony work in ${model.placeLabel}`}
+        primaryCta={{ label: "Get free quote", href: "#quote-top" }}
+      />
+      <Section id="applications" className="bg-white scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Use-cases"
+            title={`${service.name} Applications in ${model.placeLabel}`}
+          />
+          <CheckList items={model.applications} />
+        </Container>
+      </Section>
 
-          <section id="applications" className="fg-section">
-            <h2 className="fg-h2">
-              {service.name} Applications in {model.placeLabel}
-            </h2>
-            <ul className="fg-check-grid">
-              {model.applications.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section id="benefits" className="fg-section">
-            <h2 className="fg-h2">
-              Benefits of Our {service.name} in {model.placeLabel}
-            </h2>
-            <ul className="fg-check-grid">
-              {model.benefits.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section id="process" className="fg-section">
-            <h2 className="fg-h2">Our {service.name} Installation Process</h2>
-            <ol className="fg-steps">
-              {model.installationSteps.map((step) => (
-                <li key={step.step}>
-                  <span>{step.step}</span>
-                  <div>
-                    <strong>{step.title}</strong>
-                    <p>{step.body}</p>
+      <Section id="benefits" className="scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Benefits"
+            title={`Benefits of Our ${service.name} in ${model.placeLabel}`}
+          />
+          <CheckList items={model.benefits} />
+          {model.localProblems.length > 0 || model.whoNeedsThis.length > 0 ? (
+            <div className="grid gap-8 pt-4 lg:grid-cols-2">
+              {model.localProblems.length > 0 ? (
+                <div className="space-y-3">
+                  <h3 className="font-display text-xl text-brand-900 sm:text-2xl">
+                    Problems we solve in {model.placeLabel}
+                  </h3>
+                  <CheckList items={model.localProblems} />
+                </div>
+              ) : null}
+              {model.whoNeedsThis.length > 0 ? (
+                <div className="space-y-3">
+                  <h3 className="font-display text-xl text-brand-900 sm:text-2xl">
+                    Who books this in {model.placeLabel}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {model.whoNeedsThis.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-flex items-center rounded-full border border-brand-100 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700"
+                      >
+                        {item}
+                      </span>
+                    ))}
                   </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          <section id="materials" className="fg-section">
-            <h2 className="fg-h2">Premium Materials for {service.name}</h2>
-            <p className="fg-muted">
-              We discuss the highest practical material options for {service.name.toLowerCase()}{" "}
-              installation in {model.placeLabel}:
-            </p>
-            <div className="fg-material-grid">
-              {model.materials.map((item) => (
-                <article key={item}>{item}</article>
-              ))}
+                </div>
+              ) : null}
             </div>
-          </section>
+          ) : null}
+        </Container>
+      </Section>
 
-          <section id="encyclopedia" className="fg-section">
-            <h2 className="fg-h2">
-              About {service.name} Services in {model.placeLabelFull}
-            </h2>
-            <p className="fg-prose">{model.encyclopedia.lead}</p>
-            {localCopy.whyLocalParagraphs.map((paragraph) => (
-              <p key={paragraph.slice(0, 40)} className="fg-prose">
-                {paragraph}
-              </p>
+      <Section id="process" className="bg-white scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Process"
+            title={`Our ${service.name} Installation Process`}
+            lead={`Measurement-led process for ${service.name.toLowerCase()} in ${model.placeLabel}, Tamil Nadu.`}
+          />
+          <ol className="grid gap-4 sm:grid-cols-2">
+            {model.installationSteps.map((step) => (
+              <li key={step.step} className="premium-card flex gap-4 p-5">
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta-500 font-display text-lg font-bold text-brand-900"
+                >
+                  {step.step}
+                </span>
+                <span className="space-y-1.5">
+                  <strong className="block font-display text-lg text-brand-900">
+                    {step.title}
+                  </strong>
+                  <span className="block text-sm leading-6 text-ink-600">{step.body}</span>
+                </span>
+              </li>
             ))}
+          </ol>
+        </Container>
+      </Section>
 
-            {model.encyclopedia.sections.map((section) => (
-              <div key={section.id} className="fg-wiki">
-                <h3 className="fg-h3">{section.title}</h3>
-                {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 36)} className="fg-prose">
-                    {paragraph}
-                  </p>
-                ))}
-                {section.bullets?.length ? (
-                  <ul className="fg-check-grid">
-                    {section.bullets.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-            ))}
-          </section>
-
-          <section id="longform" className="fg-section">
-            <h2 className="fg-h2">{model.longform.title}</h2>
-            <p className="fg-muted">
-              Original long-form handbook for this page (~{model.longform.wordCount.toLocaleString()}{" "}
-              words). Written uniquely for {service.name} in {model.placeLabel} — not copied from
-              other websites.
-            </p>
-            <p className="fg-prose">{model.longform.lead}</p>
-
-            <nav className="fg-toc" aria-label="Complete guide sections">
-              <h3 className="fg-toc__title">Complete guide sections</h3>
-              <ol className="fg-toc__list">
-                {model.longform.sections.map((section, index) => (
-                  <li key={section.id}>
-                    <a href={`#lf-${section.id}`}>
-                      <span>{index + 1}</span>
-                      {section.title}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-
-            {model.longform.sections.map((section) => (
-              <article key={section.id} id={`lf-${section.id}`} className="fg-wiki">
-                <h3 className="fg-h3">{section.title}</h3>
-                {section.paragraphs.map((paragraph, index) => (
-                  <p key={`${section.id}-${index}`} className="fg-prose">
-                    {paragraph}
-                  </p>
-                ))}
-                {section.bullets?.length ? (
-                  <ul className="fg-check-grid">
-                    {section.bullets.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
+      <Section id="materials" className="scroll-mt-28">
+        <Container className="space-y-8">
+          <LandingHeader
+            eyebrow="Materials"
+            title={`Premium Materials for ${service.name}`}
+            lead={`We discuss the highest practical material options for ${service.name.toLowerCase()} installation in ${model.placeLabel}.`}
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {model.materials.map((item) => (
+              <article key={item} className="premium-card p-5 text-sm leading-7 text-ink-700">
+                {item}
               </article>
             ))}
-          </section>
+          </div>
+          <div className="premium-card space-y-0 overflow-hidden p-0">
+            {model.features.map((feature, index) => (
+              <div
+                key={feature.label}
+                className={`grid gap-1 px-5 py-4 sm:grid-cols-[200px_1fr] sm:gap-4 ${
+                  index % 2 === 1 ? "bg-brand-50/60" : ""
+                }`}
+              >
+                <dt className="text-sm font-bold text-brand-900">{feature.label}</dt>
+                <dd className="text-sm leading-6 text-ink-600">{feature.value}</dd>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-8">
+            <LandingHeader
+              eyebrow="Why choose Glory"
+              title="Safety-first process. Honest claims."
+              lead="Capabilities we actually deliver - measurement, materials, finishing and Tamil Nadu coverage."
+            />
+            <WhyChooseUs />
+          </div>
+        </Container>
+      </Section>
 
-          <section id="faq" className="fg-section">
-            <h2 className="fg-h2">
-              Frequently Asked Questions — {service.name} in {model.placeLabel}
-            </h2>
-            <p className="fg-muted">
-              Common questions about {service.name.toLowerCase()} installation in{" "}
-              {model.placeLabel}, {city.name}.
+      <Section id="encyclopedia" className="bg-white scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Local guide"
+            title={`About ${service.name} Services in ${model.placeLabelFull}`}
+            lead={model.encyclopedia.lead}
+          />
+          {localCopy.whyLocalParagraphs.map((paragraph) => (
+            <p key={paragraph.slice(0, 40)} className="max-w-4xl text-base leading-8 text-ink-700">
+              {paragraph}
             </p>
-            <FaqAccordion items={model.faqs} />
-          </section>
+          ))}
+          {model.encyclopedia.sections.map((section) => (
+            <div key={section.id} className="max-w-4xl space-y-3">
+              <h3 className="font-display text-xl text-brand-900 sm:text-2xl">{section.title}</h3>
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 36)} className="text-base leading-8 text-ink-700">
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets?.length ? <CheckList items={section.bullets} /> : null}
+            </div>
+          ))}
+        </Container>
+      </Section>
 
-          <section id="areas" className="fg-section">
-            <h2 className="fg-h2">
+      <Section id="longform" className="scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="Complete guide"
+            title={model.longform.title}
+            lead={`Original long-form handbook for this page (~${model.longform.wordCount.toLocaleString()} words). Written uniquely for ${service.name} in ${model.placeLabel} — not copied from other websites.`}
+          />
+          <p className="max-w-4xl text-base leading-8 text-ink-700">{model.longform.lead}</p>
+          <nav aria-label="Complete guide sections">
+            <div className="flex flex-wrap gap-2">
+              {model.longform.sections.map((section, index) => (
+                <a
+                  key={section.id}
+                  href={`#lf-${section.id}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:border-brand-300"
+                >
+                  <span aria-hidden="true" className="text-cta-500">
+                    {index + 1}
+                  </span>
+                  {section.title}
+                </a>
+              ))}
+            </div>
+          </nav>
+          {model.longform.sections.map((section) => (
+            <article key={section.id} id={`lf-${section.id}`} className="max-w-4xl scroll-mt-28 space-y-3">
+              <h3 className="font-display text-xl text-brand-900 sm:text-2xl">{section.title}</h3>
+              {section.paragraphs.map((paragraph, index) => (
+                <p
+                  key={`${section.id}-${index}`}
+                  className="text-base leading-8 text-ink-700"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets?.length ? <CheckList items={section.bullets} /> : null}
+            </article>
+          ))}
+        </Container>
+      </Section>
+
+      {model.authoritySections.length > 0 || model.seoScrollBlocks.length > 0 ? (
+        <Section className="bg-white">
+          <Container className="space-y-8">
+            <LandingHeader
+              eyebrow={model.placeLabel}
+              title={`${service.shortName} notes for ${model.placeLabel}`}
+              lead={`Place-specific notes for ${service.name.toLowerCase()} in ${model.placeLabelFull} — building mix, demand patterns and measurement pointers.`}
+            />
+            {model.authoritySections.map((section) => (
+              <div key={section.key} className="max-w-4xl space-y-3">
+                <h3 className="font-display text-xl text-brand-900 sm:text-2xl">
+                  {section.title}
+                </h3>
+                <p className="text-base leading-8 text-ink-700">{section.body}</p>
+                {section.bullets?.length ? <CheckList items={section.bullets} /> : null}
+              </div>
+            ))}
+            {model.seoScrollBlocks.map((block) => (
+              <div key={block.id} className="max-w-4xl space-y-3">
+                <h3 className="font-display text-xl text-brand-900 sm:text-2xl">{block.title}</h3>
+                <p className="text-base font-semibold leading-8 text-ink-700">{block.lead}</p>
+                {block.paragraphs.map((paragraph, index) => (
+                  <p key={`${block.id}-${index}`} className="text-base leading-8 text-ink-700">
+                    {paragraph}
+                  </p>
+                ))}
+                {block.bullets?.length ? <CheckList items={block.bullets} /> : null}
+              </div>
+            ))}
+          </Container>
+        </Section>
+      ) : null}
+
+      <section id="areas" className="section-space scroll-mt-28 bg-brand-900 text-white">
+        <div className="container-page space-y-8">
+          <div className="max-w-2xl space-y-3">
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-cta-500">
+              <span className="h-px w-8 bg-cta-500" aria-hidden="true" />
+              Service areas
+            </p>
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">
               {service.name} in Nearby Areas
             </h2>
-            <p className="fg-muted">
+            <p className="text-base leading-7 text-white/75">
               We also provide {service.name.toLowerCase()} installation services in these nearby{" "}
-              {city.name} localities:
+              {city.name} localities — plus every service we fit in {model.placeLabel}.
             </p>
-            <div className="fg-pill-wrap">
-              {model.nearbyAreas.map((item) => (
-                <Link key={item.href} href={item.href} className="fg-pill">
-                  {service.shortName} in {item.name}
-                </Link>
-              ))}
+          </div>
+          {directoryGroups.map((group) => (
+            <div key={group.heading} className="space-y-3">
+              <h3 className="font-display text-xl font-bold text-white">{group.heading}</h3>
+              <div className="flex flex-wrap gap-2">
+                {group.pills.map((item) => (
+                  <Link
+                    key={`${item.href}-${item.name}`}
+                    href={item.href}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                  >
+                    {item.name}
+                    <span aria-hidden="true" className="text-cta-500">
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
+          ))}
+          <p className="text-sm text-white/75">
+            <Link
+              href={buildServiceInCityPath(service.slug, city.slug)}
+              className="font-semibold text-cta-500 hover:text-cta-600"
+            >
+              View all {service.name} services in {city.name}
+            </Link>{" "}
+            ·{" "}
+            <Link
+              href={buildServicePath(service.slug)}
+              className="font-semibold text-cta-500 hover:text-cta-600"
+            >
+              {service.name} overview
+            </Link>
+          </p>
+        </div>
+      </section>
 
-            <h3 className="fg-h3">Other Services in {model.placeLabel}</h3>
-            <div className="fg-pill-wrap">
-              {model.relatedServices.slice(0, 16).map((item) => (
-                <Link key={item.href} href={item.href} className="fg-pill">
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+      <Section id="faq" className="bg-white scroll-mt-28">
+        <Container className="space-y-6">
+          <LandingHeader
+            eyebrow="FAQ"
+            title={`Frequently Asked Questions — ${service.name} in ${model.placeLabel}`}
+            lead={`Common questions about ${service.name.toLowerCase()} installation in ${model.placeLabel}, ${city.name}.`}
+          />
+          <FaqAccordion items={model.faqs} />
+        </Container>
+      </Section>
 
-            <h3 className="fg-h3">
-              Related {service.name} searches
-            </h3>
-            <div className="fg-pill-wrap">
-              {model.searchVariants.map((item) => (
-                <Link key={`${item.href}-${item.name}`} href={item.href} className="fg-pill">
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            <p className="fg-muted mt-4">
-              <Link href={buildServiceInCityPath(service.slug, city.slug)}>
-                View all {service.name} services in {city.name}
-              </Link>
-              {" · "}
-              <Link href={buildServicePath(service.slug)}>{service.name} overview</Link>
-            </p>
-          </section>
-
-          <section className="fg-final-cta">
-            <h2>Ready for {service.name} Installation in {model.placeLabel}?</h2>
-            <p>
+      <Section>
+        <Container className="space-y-6">
+          <div className="premium-card gradient-border space-y-4 p-6 text-center sm:p-10">
+            <h2 className="font-display text-3xl font-bold text-brand-900 sm:text-4xl">
+              Ready for {service.name} Installation in {model.placeLabel}?
+            </h2>
+            <p className="mx-auto max-w-2xl text-base leading-8 text-ink-600">
               Get professional {service.name.toLowerCase()} installation in {model.placeLabel}{" "}
               today. Free inspection, measurement-based rates, and clear after-sales guidance.
             </p>
-            <div className="fg-hero__actions">
-              <Button href={`tel:${BUSINESS_CONFIG.phone.raw}`} external>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button href={`tel:${BUSINESS_CONFIG.phone.raw}`} size="lg" external>
                 Call: {BUSINESS_CONFIG.phone.display}
               </Button>
               <Button
                 href={`https://wa.me/${BUSINESS_CONFIG.whatsapp.raw}`}
-                variant="secondary"
+                variant="whatsapp"
+                size="lg"
                 external
               >
                 WhatsApp Now
               </Button>
             </div>
-          </section>
-
-          <section id="quote" className="fg-section fg-quote-card">
-            <h2 className="fg-h2">Request a Callback</h2>
-            <p className="fg-muted">
-              Fill the form below and connect with our experts for free assessment.
-            </p>
-            <QuoteFormLoader />
-          </section>
-        </div>
-
-        <aside className="fg-sidebar" aria-label="Service sidebar">
-          <div className="fg-side-card fg-side-card--dark">
-            <h2>
-              {service.shortName} in {model.placeLabel}
-            </h2>
-            <ul className="fg-side-meta">
-              <li>
-                <strong>Serving</strong> {model.placeLabel}
-                {area ? `, ${city.name}` : ""}
-              </li>
-              <li>
-                <strong>Phone</strong>{" "}
-                <a href={`tel:${BUSINESS_CONFIG.phone.raw}`}>{BUSINESS_CONFIG.phone.display}</a>
-              </li>
-              <li>
-                <strong>Hours</strong> {BUSINESS_CONFIG.businessHours.display}
-              </li>
-            </ul>
-            <Button href="#quote-top" className="w-full justify-center">
-              Get Free Quote
-            </Button>
           </div>
+        </Container>
+      </Section>
 
-          <div className="fg-side-card">
-            <h3>Nearby Service Areas</h3>
-            <div className="fg-pill-wrap">
-              {model.nearbyAreas.slice(0, 6).map((item) => (
-                <Link key={item.href} href={item.href} className="fg-pill">
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
+      <HomeQuote />
 
-          <div className="fg-side-card">
-            <h3>Why Choose Glory?</h3>
-            <ul className="fg-side-list">
-              {localCopy.whyChoose.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="fg-side-card">
-            <h3>Other Services in {model.placeLabel}</h3>
-            <ul className="fg-side-links">
-              {model.relatedServices.slice(0, 12).map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href}>{item.name}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-      </Container>
+      <CtaBanner />
     </article>
   );
 }

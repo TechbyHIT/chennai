@@ -13,7 +13,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Gallery",
   description:
-    "HD installation gallery for invisible grills, safety nets, mosquito nets and related work across Tamil Nadu.",
+    "HD installation gallery for invisible grills, safety nets, bird nets and related work across Tamil Nadu.",
   alternates: { canonical: generateCanonical("/gallery/") },
 };
 
@@ -35,8 +35,8 @@ export default function GalleryPage() {
             <Heading as="h1">Installation gallery</Heading>
             <p className="leading-8 text-ink-700">
               {catalog.totalImages} HD project photos across invisible grills, balcony safety nets,
-              mosquito nets, cloth hangers, bird spikes and more — organized from verified
-              installation work for Tamil Nadu homes.
+              cloth hangers, bird spikes and more — organized from verified installation work for
+              Tamil Nadu homes.
             </p>
           </div>
           <ImageGallery

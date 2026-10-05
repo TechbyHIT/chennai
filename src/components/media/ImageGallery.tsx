@@ -3,6 +3,7 @@ import { altFromPath } from "@/lib/media/catalog";
 
 type Props = {
   images: string[];
+  alts?: string[];
   title?: string;
   columns?: "2" | "3" | "4";
   priorityCount?: number;
@@ -17,6 +18,7 @@ const colClass = {
 
 export function ImageGallery({
   images,
+  alts,
   title,
   columns = "3",
   priorityCount = 0,
@@ -37,7 +39,7 @@ export function ImageGallery({
           >
             <SafeImage
               src={src}
-              alt={altFromPath(src, index)}
+              alt={alts?.[index] ?? altFromPath(src, index)}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover transition duration-500 group-hover:scale-[1.03]"

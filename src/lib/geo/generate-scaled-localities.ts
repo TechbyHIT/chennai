@@ -49,8 +49,48 @@ const URBAN_EXTRA = [
   "IT Park Area", "Industrial Area", "Housing Board Colony",
 ] as const;
 
-/** Target new scaled areas → ~10M total pages with 18 services (services×areas + hubs). */
-export const SCALED_AREA_TARGET = 525_000;
+/**
+ * Per-city scaled locality budgets, sized to each city's real residential
+ * footprint rather than split evenly. Chennai and its 150km belt are the
+ * primary SEO focus and carry the largest budgets; Coimbatore is the second
+ * hub; the regional cities get budgets in line with their size.
+ */
+const CITY_QUOTAS: Record<string, number> = {
+  // Chennai 150km belt
+  chennai: 60_000,
+  tambaram: 6_000,
+  avadi: 6_000,
+  poonamallee: 4_000,
+  chengalpattu: 4_000,
+  kanchipuram: 4_000,
+  guduvancheri: 3_000,
+  sriperumbudur: 3_000,
+  tiruvallur: 3_000,
+  mahabalipuram: 1_500,
+  vellore: 6_000,
+  ranipet: 2_500,
+  arakkonam: 2_500,
+  arcot: 2_000,
+  tindivanam: 2_000,
+  arani: 2_000,
+  tiruttani: 1_500,
+  vandavasi: 1_500,
+  cheyyar: 1_500,
+  // Second hub
+  coimbatore: 30_000,
+  // Regional cities
+  madurai: 6_000,
+  tiruchirappalli: 6_000,
+  salem: 6_000,
+  tiruppur: 4_000,
+  erode: 4_000,
+  hosur: 4_000,
+  tirunelveli: 4_000,
+  ooty: 1_500,
+};
+
+/** Budget for a served city that has no explicit quota above. */
+const DEFAULT_CITY_QUOTA = 500;
 
 type ServedCity = {
   slug: string;
@@ -81,43 +121,8 @@ function servedCities(): ServedCity[] {
   );
 }
 
-/** Fixed per-city quotas that sum to SCALED_AREA_TARGET. */
 export function cityScaledQuota(slug: string): number {
-  const cities = servedCities();
-  const n = cities.length;
-  const hubs: Record<string, number> = {
-    coimbatore: 40_000,
-    chennai: 30_000,
-    madurai: 8_000,
-    tiruchirappalli: 8_000,
-    salem: 8_000,
-    tiruppur: 5_000,
-    erode: 5_000,
-    hosur: 5_000,
-    vellore: 5_000,
-    tirunelveli: 5_000,
-    nagercoil: 5_000,
-    thanjavur: 4_000,
-    dindigul: 4_000,
-    karur: 4_000,
-    namakkal: 4_000,
-  };
-
-  let reserved = 0;
-  let hubCount = 0;
-  for (const city of cities) {
-    if (hubs[city.slug]) {
-      reserved += hubs[city.slug]!;
-      hubCount += 1;
-    }
-  }
-
-  const restCities = Math.max(n - hubCount, 1);
-  const restPool = Math.max(SCALED_AREA_TARGET - reserved, 0);
-  const restEach = Math.floor(restPool / restCities);
-
-  if (hubs[slug]) return hubs[slug]!;
-  return Math.max(120, restEach);
+  return CITY_QUOTAS[slug] ?? DEFAULT_CITY_QUOTA;
 }
 
 function buildNamesForCity(

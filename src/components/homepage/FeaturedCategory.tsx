@@ -17,6 +17,9 @@ export function FeaturedCategory({
   points,
   reverse = false,
   muted = false,
+  exploreHref,
+  quoteHref = "/#contact",
+  imageAlt,
 }: {
   service: Service;
   eyebrow: string;
@@ -25,6 +28,9 @@ export function FeaturedCategory({
   points: string[];
   reverse?: boolean;
   muted?: boolean;
+  exploreHref?: string;
+  quoteHref?: string;
+  imageAlt?: string;
 }) {
   const reduceMotion = useReducedMotion();
 
@@ -45,7 +51,7 @@ export function FeaturedCategory({
         >
           <SafeImage
             src={service.heroImage || "/images/homepage/glory-home-01.png"}
-            alt={`${service.name} by ${BUSINESS_CONFIG.name}`}
+            alt={imageAlt ?? `${service.name} by ${BUSINESS_CONFIG.name}`}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover"
@@ -73,14 +79,14 @@ export function FeaturedCategory({
             ))}
           </ul>
           <div className="flex flex-wrap gap-3">
-            <Button href={buildServicePath(service.slug)} variant="secondary">
+            <Button href={exploreHref ?? buildServicePath(service.slug)} variant="secondary">
               Explore {service.shortName || service.name}
             </Button>
             <Button href={`tel:${BUSINESS_CONFIG.phone.raw}`} external>
               Call Now
             </Button>
             <Link
-              href="/#contact"
+              href={quoteHref}
               className="inline-flex min-h-11 items-center text-sm font-semibold text-brand-500 hover:text-brand-600"
             >
               Get a quote â†’

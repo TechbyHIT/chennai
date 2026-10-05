@@ -317,12 +317,6 @@
       "/images/projects/invisible-grill-window/n43.jpg",
       "/images/projects/invisible-grill-window/n49.jpg"
     ],
-    "mosquito-nets": [
-      "/images/projects/mosquito-nets/n21.jpg",
-      "/images/projects/mosquito-nets/mosq1.png",
-      "/images/projects/mosquito-nets/n22.webp",
-      "/images/projects/mosquito-nets/mosq2.jpg"
-    ],
     "pet-safety-nets": [
       "/images/projects/pet-safety-nets/pet-2.jpg",
       "/images/projects/pet-safety-nets/monkey-1.jpg",
@@ -793,35 +787,6 @@
         "/images/projects/duct-area-nets/dc39.jpg"
       ]
     },
-    "mosquito-nets": {
-      "hero": "/images/projects/mosquito-nets/n21.jpg",
-      "gallery": [
-        "/images/projects/mosquito-nets/n21.jpg",
-        "/images/projects/mosquito-nets/mosq1.png",
-        "/images/projects/mosquito-nets/n22.webp",
-        "/images/projects/mosquito-nets/mosq2.jpg",
-        "/images/projects/invisible-grill-window/n50.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-13-14.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-07-30.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-03-34.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-07-41.jpg",
-        "/images/projects/invisible-grill-window/o1.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-13-22.jpg",
-        "/images/projects/invisible-grill-window/n41.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-03-38.jpg",
-        "/images/projects/invisible-grill-window/n46.jpg",
-        "/images/projects/invisible-grill-window/n42.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-03-59.jpg",
-        "/images/projects/invisible-grill-window/whatsapp-image-2026-06-26-at-10-03-40.jpg",
-        "/images/projects/invisible-grill-window/o3.jpg",
-        "/images/projects/invisible-grill-window/n44.jpg",
-        "/images/projects/invisible-grill-window/n51.jpg",
-        "/images/projects/invisible-grill-window/i14.jpg",
-        "/images/projects/invisible-grill-window/i16.jpg",
-        "/images/projects/invisible-grill-window/o2.jpg",
-        "/images/projects/invisible-grill-window/n45.webp"
-      ]
-    },
     "bird-nets": {
       "hero": "/images/projects/bird-spikes/spike3.webp",
       "gallery": [
@@ -957,9 +922,6 @@
     "/images/projects/safety-nets-balcony/b-17.jpg",
     "/images/projects/safety-nets-balcony/n53.jpg",
     "/images/projects/safety-nets-balcony/whatsapp-image-2026-07-04-at-09-14-04.jpg",
-    "/images/projects/mosquito-nets/n21.jpg",
-    "/images/projects/mosquito-nets/mosq1.png",
-    "/images/projects/mosquito-nets/n22.webp",
     "/images/projects/cloth-hangers/cloth8.jpg",
     "/images/projects/cloth-hangers/cloth7.webp",
     "/images/projects/cloth-hangers/whatsapp-image-2026-07-04-at-09-07-39.jpg",

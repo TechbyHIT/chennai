@@ -4,13 +4,13 @@ import { getLocationBySlug, getServiceBySlug } from "@/lib/data/repositories";
 
 describe("composeUniqueIntro", () => {
   it("builds place-specific intros for TN service×city pages", () => {
-    const service = getServiceBySlug("mosquito-nets");
+    const service = getServiceBySlug("bird-nets");
     const location = getLocationBySlug("chennai");
     expect(service).toBeTruthy();
     expect(location).toBeTruthy();
 
     const intro = composeUniqueIntro({ service, location });
-    expect(intro).toContain("Mosquito Nets");
+    expect(intro.toLowerCase()).toContain("bird nets");
     expect(intro).toContain("Chennai");
     expect(intro).toContain("Tamil Nadu");
     expect(intro.toLowerCase()).not.toContain("same-day guarantee");

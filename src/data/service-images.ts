@@ -64,11 +64,6 @@ const SPIKES = [
   "/images/services/bird-spikes/03.jpg",
 ] as const;
 
-const MOSQUITO = [
-  "/images/services/mosquito-nets/01.jpg",
-  "/images/services/mosquito-nets/02.png",
-] as const;
-
 const BUILDING = [
   "/images/services/building-safety-nets/01.jpg",
   "/images/services/building-safety-nets/02.jpg",
@@ -92,7 +87,6 @@ export const SERVICE_SHIPPED_IMAGES: Record<string, string[]> = {
   "children-safety-nets": [...CHILDREN, ...NETS.slice(0, 2)],
   "pet-safety-nets": [...PETS, ...NETS.slice(0, 2)],
   "building-safety-nets": [...BUILDING, ...NETS.slice(0, 2)],
-  "mosquito-nets": [...MOSQUITO, ...WINDOWS.slice(0, 2)],
   "bird-nets": [...SPIKES, ...NETS.slice(0, 2)],
   "bird-spikes": [...SPIKES],
   "monkey-nets": [...MONKEY, ...NETS.slice(0, 3)],
