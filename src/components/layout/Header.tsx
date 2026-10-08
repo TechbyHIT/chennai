@@ -106,7 +106,10 @@ export function Header() {
 
       <div className="relative mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-2 px-3 sm:min-h-[80px] sm:px-6 lg:min-h-[88px] lg:px-8">
         <div className="flex min-w-0 shrink items-center">
-          <Logo compact className="max-w-[min(100%,200px)] sm:max-w-[220px] lg:max-w-[200px] xl:max-w-[260px]" />
+          <Logo
+            compact
+            className="max-w-[min(100%,200px)] sm:max-w-[220px] lg:max-w-[200px] xl:max-w-[260px]"
+          />
         </div>
 
         <nav

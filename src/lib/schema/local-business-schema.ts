@@ -75,6 +75,7 @@ export function localBusinessSchema() {
           },
         }
       : {}),
+    hasMap: BUSINESS_CONFIG.googleMapsLink,
     openingHoursSpecification: openingHoursSpecification(),
     contactPoint: [
       {

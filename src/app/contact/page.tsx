@@ -67,9 +67,25 @@ export default function ContactPage() {
                   </a>
                 </p>
                 <p className="text-sm leading-7 text-ink-600">
-                  {BUSINESS_CONFIG.address.city}, {BUSINESS_CONFIG.address.state}
+                  <a
+                    href={BUSINESS_CONFIG.googleMapsLink}
+                    className="text-brand-700 underline"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {BUSINESS_CONFIG.address.street}, {BUSINESS_CONFIG.address.city},{" "}
+                    {BUSINESS_CONFIG.address.state} {BUSINESS_CONFIG.address.postalCode}
+                  </a>
                 </p>
+                <p className="text-sm text-ink-600">{BUSINESS_CONFIG.businessHours.display}</p>
               </div>
+              <iframe
+                title="Glory Invisible Grills, West Mogappair, Chennai"
+                src={BUSINESS_CONFIG.mapEmbedUrl}
+                className="h-64 w-full rounded-[1.5rem] border border-brand-100"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
             <div className="space-y-4">
               <Heading as="h2">Request a quotation</Heading>

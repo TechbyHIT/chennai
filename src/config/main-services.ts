@@ -27,9 +27,9 @@ export const MAIN_SERVICES: MainServicePillar[] = [
     label: "Invisible Grills",
     tagline:
       "Near-transparent SS304 / SS316 cable grills for balconies, windows and terraces.",
-    seoTitle: "Invisible Grills in Tamil Nadu | SS304/SS316",
+    seoTitle: "Invisible Grill Installation | SS316",
     seoDescription:
-      "Invisible grill installation in Tamil Nadu for balconies, windows and terraces. SS304 / SS316 cables, child and pet safe spacing. Free site visit and quote.",
+      "Invisible grill installation in Chennai and within 150 km for balconies and windows. SS316 and SS304 cables, spacing set on site. Free site visit.",
     keywords: [
       "invisible grills",
       "invisible grill installation",
@@ -50,9 +50,9 @@ export const MAIN_SERVICES: MainServicePillar[] = [
     label: "Safety Nets",
     tagline:
       "Every type of safety net: balcony, terrace, kids, pet, building, bird and monkey nets.",
-    seoTitle: "Safety Nets in Tamil Nadu | Balcony & Kids",
+    seoTitle: "All Types of Safety Nets | Balcony",
     seoDescription:
-      "All types of safety nets in Tamil Nadu: balcony, terrace, kids, pet, building, bird and monkey nets. UV-stabilised mesh, measured fitting, free site visit.",
+      "All types of safety nets in Chennai and within 150 km: balcony, kids, pet, bird and building nets. UV-stabilised mesh, measured on site. Free visit.",
     keywords: [
       "safety nets",
       "balcony safety net",
@@ -76,9 +76,9 @@ export const MAIN_SERVICES: MainServicePillar[] = [
     label: "Cloth Hangers",
     tagline:
       "Ceiling and balcony cloth drying hangers fitted to your span and ceiling height.",
-    seoTitle: "Ceiling & Balcony Cloth Hangers | Tamil Nadu",
+    seoTitle: "Ceiling Cloth Hangers for Apartments",
     seoDescription:
-      "Ceiling and balcony cloth drying hanger installation for apartments and homes across Tamil Nadu. Measured to your space, neat fixing. Free site visit.",
+      "Ceiling and balcony cloth drying hangers in Chennai and within 150 km for apartments. Measured to your span and ceiling height. Free site visit.",
     keywords: [
       "cloth hangers",
       "ceiling cloth hanger",
@@ -93,9 +93,9 @@ export const MAIN_SERVICES: MainServicePillar[] = [
     label: "Sports Nets",
     tagline:
       "Cricket practice, box cricket and perimeter netting built to your site size.",
-    seoTitle: "Sports Nets in Tamil Nadu | Cricket Practice",
+    seoTitle: "Cricket Practice Nets & Sports Nets",
     seoDescription:
-      "Cricket practice nets and sports netting installation across Tamil Nadu for homes, terraces, academies and clubs. Custom size and height. Free site survey.",
+      "Cricket practice nets and sports netting in Chennai and within 150 km for terraces, compounds and academies. Custom size and height. Free site survey.",
     keywords: [
       "sports nets",
       "cricket practice net",
@@ -110,9 +110,9 @@ export const MAIN_SERVICES: MainServicePillar[] = [
     label: "Bird Spikes",
     tagline:
       "Stainless anti-bird spikes for ledges, sunshades, parapets and AC units.",
-    seoTitle: "Anti Pigeon Bird Spikes in Tamil Nadu",
+    seoTitle: "Anti Pigeon Bird Spikes | Balconies",
     seoDescription:
-      "Bird spike and anti-pigeon spike installation in Tamil Nadu for balcony ledges, sunshades, parapets and AC units. Stainless options. Free site visit.",
+      "Bird spike and anti-pigeon spike installation in Chennai and within 150 km for ledges, sunshades, parapets and AC units. Stainless options. Free site visit.",
     keywords: [
       "bird spikes",
       "pigeon spikes",

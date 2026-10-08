@@ -34,7 +34,7 @@ export const revalidate = 86400;
 
 const HOME_TITLE = "Invisible Grills & Safety Nets in Chennai | Glory Grills";
 const HOME_DESCRIPTION =
-  "Invisible grills, all types of safety nets, cloth hangers, sports nets and bird spikes in Chennai and within 150 km, plus Coimbatore and major Tamil Nadu cities. Free site visit.";
+  "Invisible grills, safety nets, cloth hangers, sports nets and bird spikes in Chennai and within 150 km. Apartments and gated communities. Free site visit.";
 
 export const metadata: Metadata = {
   // `absolute` skips the "| Glory Grills" suffix so the full title fits in the SERP.
@@ -267,7 +267,7 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Our core services"
             title="Invisible grills, safety nets, cloth hangers, sports nets and bird spikes"
-            lead="The five things we install most - each measured on site and fitted across Tamil Nadu."
+            lead="The five installations we fit most in Chennai and within 150 km — each measured on site before the quote."
           />
           <MainServicesShowcase services={services} fallbackImage={fallbackHero} />
           <div className="space-y-4 pt-4">

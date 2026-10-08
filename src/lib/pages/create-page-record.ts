@@ -145,9 +145,13 @@ export function createServicePage(service: Service): PageRecord {
         serviceName: service.name,
         summary: service.summary,
       }),
-    h1: `${service.name} Installation in Tamil Nadu`,
+    h1: pillar
+      ? `${service.name} Installation in Chennai`
+      : `${service.name} Installation in Tamil Nadu`,
     introduction: service.introduction,
-    searchIntent: `${service.name} installation Tamil Nadu`,
+    searchIntent: pillar
+      ? `${service.name} installation Chennai`
+      : `${service.name} installation Tamil Nadu`,
     qualityScore: service.qualityScore,
     crawlPriority: pillar ? "critical" : "high",
     sitemapGroup: "services",

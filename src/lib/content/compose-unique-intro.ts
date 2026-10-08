@@ -39,14 +39,12 @@ export function composeUniqueIntro(input: {
     service.applications[seed % Math.max(service.applications.length, 1)] ??
     service.applications[0];
 
-  const openers = [
-    `${service.name} in ${place.name}${location && area ? `, ${location.name}` : ""}, Tamil Nadu, starts with a measured look at your openings — not a one-size template.`,
-    `Homeowners searching for ${service.name.toLowerCase()} around ${place.name} usually want a clear specification path before they approve installation.`,
-    `For ${place.name}${area && location ? ` in ${location.name}` : ""}, ${service.shortName.toLowerCase()} decisions work best when the opening use-case is defined first.`,
-  ];
+  const placeLabel =
+    area && location ? `${area.name}, ${location.name}` : place.name;
+  const lead = `${service.name} in ${placeLabel}, Tamil Nadu, is measured for apartments, gated communities and houses — not fitted from a one-size template.`;
 
   const clauses = [
-    openers[seed % openers.length],
+    lead,
     `Local housing here commonly includes ${buildingMix}, which shapes fixing points, access and spacing recommendations.`,
     coastal
       ? `Coastal or humid exposure around ${place.name} is considered when discussing cable coating, mesh grade and cleaning intervals.`

@@ -12,6 +12,7 @@ export default function Error({
 }) {
   return (
     <Container className="py-20 space-y-4">
+      <meta name="robots" content="noindex, nofollow" />
       <Heading as="h1">Something went wrong</Heading>
       <p className="text-ink-700">Please try again or return to the homepage.</p>
       <div className="flex gap-3">

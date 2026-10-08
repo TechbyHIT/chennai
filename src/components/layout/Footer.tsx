@@ -83,7 +83,17 @@ export function Footer() {
           <p className="text-sm leading-7 text-white/75">{BUSINESS_CONFIG.description}</p>
           <div className="space-y-1.5 text-sm text-white/80">
             <p>
-              {BUSINESS_CONFIG.address.city}, {BUSINESS_CONFIG.address.state}
+              <a
+                href={BUSINESS_CONFIG.googleMapsLink}
+                className="hover:text-cta-500"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {BUSINESS_CONFIG.address.street}
+                <br />
+                {BUSINESS_CONFIG.address.city}, {BUSINESS_CONFIG.address.state}{" "}
+                {BUSINESS_CONFIG.address.postalCode}
+              </a>
             </p>
             <p>
               <a href={`tel:${BUSINESS_CONFIG.phone.raw}`} className="hover:text-cta-500">

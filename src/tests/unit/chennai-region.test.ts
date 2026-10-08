@@ -184,7 +184,13 @@ describe("Chennai 150 km region focus", () => {
   });
 
   it("covers every apartment project as a published locality of a served city", () => {
-    expect(CHENNAI_APARTMENT_AREAS.length).toBeGreaterThanOrEqual(20);
+    expect(CHENNAI_APARTMENT_AREAS.length).toBeGreaterThanOrEqual(140);
+    const chennaiApts = CHENNAI_APARTMENT_AREAS.filter((a) => a.parentId === "loc-chennai");
+    const avadiApts = CHENNAI_APARTMENT_AREAS.filter((a) => a.parentId === "loc-avadi");
+    const porurApts = chennaiApts.filter((a) => a.introduction.includes("Porur"));
+    expect(chennaiApts.length).toBeGreaterThanOrEqual(100);
+    expect(avadiApts.length).toBeGreaterThanOrEqual(35);
+    expect(porurApts.length).toBeGreaterThanOrEqual(8);
     const slugs = new Set(CHENNAI_APARTMENT_AREAS.map((a) => a.slug));
     expect(slugs.size).toBe(CHENNAI_APARTMENT_AREAS.length);
     for (const area of CHENNAI_APARTMENT_AREAS) {

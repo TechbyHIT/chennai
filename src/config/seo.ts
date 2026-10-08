@@ -5,9 +5,8 @@ export const SEO_CONFIG = {
     service: 1200,
     location: 700,
     area: 700,
-  // Raise helpful-content floors for programmatic landings.
-  "service-location": 10000,
-  "service-area": 10000,
+  "service-location": 700,
+  "service-area": 700,
     solution: 900,
     "property-type-service": 900,
     guide: 1500,

@@ -18,9 +18,8 @@ function parseServiceInCity(segment: string) {
 
 /**
  * Towns that lost their own city hub now redirect to the locality that
- * replaced them. This has to happen in middleware rather than in the page:
- * the root loading.tsx makes these routes stream, so a page-level
- * permanentRedirect() is delivered inside a 200 payload instead of a 308.
+ * replaced them. Middleware returns a real 308 before any page render, so
+ * Google records a redirect instead of a 200 noindex shell.
  */
 function retiredTownRedirect(pathname: string): string | null {
   const parts = pathname.split("/").filter(Boolean);

@@ -81,14 +81,14 @@ export function HomeHero({
               <>
                 Invisible Grills &amp; Safety Nets
                 <span className="mt-2 block text-cta-500">
-                  {titleAccent ?? "in Chennai & Across Tamil Nadu"}
+                  {titleAccent ?? "in Chennai"}
                 </span>
               </>
             )}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-white/90 sm:text-xl" data-speakable>
             {lead ??
-              "Elegant safety solutions for balconies, windows, apartments, villas and modern homes — measured on site, quoted in writing, finished with care."}
+              "Cloth hangers, sports nets and bird spikes as well — measured for apartments and gated communities in Chennai and within 150 km, plus Coimbatore and major Tamil Nadu cities. Free site visit, written quote."}
           </p>
           <div className="flex flex-wrap gap-3">
             <Button href={quoteHref} size="lg">

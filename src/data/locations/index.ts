@@ -1,4 +1,5 @@
 import type { Area, Location } from "@/types/location";
+import { EXTRA_APARTMENT_AREAS, EXTRA_APARTMENT_IDS } from "@/data/apartment-projects";
 import { TN_TOWN_HUB_AREAS } from "@/data/tn-town-hub-areas";
 import * as chennai from "./chennai";
 import * as tambaram from "./tambaram";
@@ -39,7 +40,7 @@ const MODULES = [chennai, tambaram, chengalpattu, mahabalipuram, guduvancheri, k
 export const INITIAL_LOCATIONS: Location[] = MODULES.map((m) => m.LOCATION);
 
 const seen = new Set<string>();
-export const INITIAL_AREAS: Area[] = [...MODULES.flatMap((m) => m.AREAS), ...TN_TOWN_HUB_AREAS].filter(
+export const INITIAL_AREAS: Area[] = [...MODULES.flatMap((m) => m.AREAS), ...TN_TOWN_HUB_AREAS, ...EXTRA_APARTMENT_AREAS].filter(
   (area) => {
     const key = `${area.parentId}::${area.slug}`;
     if (seen.has(key)) return false;
@@ -78,7 +79,8 @@ const APARTMENT_IDS = new Set<string>([
   "area-chengalpattu-tvs-emerald-jardin",
   "area-chengalpattu-mahindra-world-city",
   "area-guduvancheri-shriram-shankari",
-  "area-kanchipuram-hiranandani-parks"
+  "area-kanchipuram-hiranandani-parks",
+  ...EXTRA_APARTMENT_IDS,
 ]);
 
 export const CHENNAI_APARTMENT_AREAS: Area[] = INITIAL_AREAS.filter((area) =>

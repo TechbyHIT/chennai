@@ -25,6 +25,7 @@ export function Logo({
       href="/"
       className={cn("group flex items-center overflow-visible", className)}
       aria-label={`${BUSINESS_CONFIG.name} home`}
+      data-logo={compact ? "compact" : "full"}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

@@ -54,7 +54,8 @@ export type LongformArticle = {
 
 /**
  * Original long-form SEO article unique to service × city × area.
- * Targets ~10,000 words via many independent sections; never copies competitor copy.
+ * Locality article sized to stay renderable under crawl load.
+ * Padding to tens of thousands of words was timing out the server (GSC 5xx).
  */
 export function composeLongformSeo(input: {
   service: Service;
@@ -208,17 +209,17 @@ export function composeLongformSeo(input: {
     bulletBuilders?: Array<() => string>,
     minParagraphs = 5,
   ): LongformSection {
-    const count = minParagraphs + Math.floor(rng() * 4); // 5-8
+    const count = Math.min(builders.length, Math.max(2, Math.min(minParagraphs, 2)));
     const paragraphs: string[] = [];
     for (let i = 0; i < count; i += 1) {
-      paragraphs.push(pick(rng, builders)());
+      paragraphs.push(builders[i % builders.length]!());
     }
-    // Ensure uniqueness within section by appending a localizing sentence when duplicates slip in.
-    const unique = paragraphs.map((p, index) =>
-      `${p} For ${place}, detail ${index + 1} in this ${shortL} discussion stays tied to measured openings rather than generic claims.`,
+    const unique = paragraphs.map(
+      (p) =>
+        `${p} For ${place}, this ${shortL} note stays tied to measured openings rather than a catalogue claim.`,
     );
     const bullets = bulletBuilders
-      ? Array.from({ length: 6 + Math.floor(rng() * 4) }, () => pick(rng, bulletBuilders)())
+      ? bulletBuilders.slice(0, 4).map((build) => build())
       : undefined;
     return { id, title, paragraphs: unique, bullets };
   }
@@ -1154,76 +1155,6 @@ export function composeLongformSeo(input: {
     );
   }
 
-  // Extra filler-free expansion blocks to push toward 10k unique words:
-  // scenario matrices for each application × each of 3 audiences
-  const audiences = [
-    "young families",
-    "pet owners",
-    "apartment residents",
-    "independent-house owners",
-    "renovators replacing iron grills",
-    "society committees",
-  ];
-  const apps =
-    service.applications.length > 0
-      ? service.applications
-      : ["Balcony edges", "Windows", "Utility areas"];
-
-  for (const app of apps) {
-    sections.push(
-      expandTopic(
-        `matrix-${app.toLowerCase().replace(/\s+/g, "-").slice(0, 40)}`,
-        `${app} with ${short} in ${place}: detailed notes`,
-        audiences.map(
-          (audience) => () =>
-            paragraph(
-              () =>
-                `For ${audience} considering ${app.toLowerCase()} in ${place}, ${svcL} planning starts with how the space is used hour by hour.`,
-              clause.housing,
-              clause.climate,
-              clause.process,
-              () => `Safety angle: ${clause.safety()}.`,
-              () => `Commercial angle: quotations should list this opening explicitly and name ${clause.material()}.`,
-              () => `Local angle: ${clause.localFact()}.`,
-              clause.intent,
-              clause.trust,
-            ),
-        ),
-        [
-          () => `${app} — measurement required`,
-          () => `${app} — intent confirmation`,
-          () => `${app} — material discussion`,
-          () => `${app} — access planning in ${place}`,
-          () => `${app} — handover guidance`,
-        ],
-        6,
-      ),
-    );
-  }
-
-  // Deep dive paragraphs for each benefit
-  sections.push(
-    expandTopic(
-      "benefits-deep",
-      `Benefits of ${svc} unpacked for ${place} households`,
-      (service.benefits.length ? service.benefits : ["Practical coverage", "Clearer views", "Measured fit"]).map(
-        (benefit) => () =>
-          paragraph(
-            () => `Benefit focus: ${benefit}.`,
-            () =>
-              `In ${placeFull}, this benefit only materialises when openings are measured and the system matches intent.`,
-            clause.housing,
-            clause.climate,
-            clause.process,
-            () => `Trade-off to discuss: denser coverage can change look and ${clause.price()}.`,
-            clause.trust,
-          ),
-      ),
-      service.benefits.map((b) => () => b),
-      6,
-    ),
-  );
-
   const lead = paragraph(
     () =>
       `This in-depth Glory Invisible Grills article covers ${svc} in ${placeFull} for readers who want more than a short sales blurb.`,
@@ -1237,9 +1168,8 @@ export function composeLongformSeo(input: {
   const joined = [title, lead, ...sections.flatMap((s) => [s.title, ...s.paragraphs, ...(s.bullets ?? [])])].join(" ");
   let wordCount = wordsOf(joined);
 
-  // If under target, add extra unique expansion sections until >= 10000 words
   let guard = 0;
-  while (wordCount < 10000 && guard < 40) {
+  while (wordCount < 900 && guard < 2) {
     guard += 1;
     const extra = expandTopic(
       `expansion-${guard}`,

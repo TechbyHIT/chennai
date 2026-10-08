@@ -29,8 +29,10 @@ export function organizationSchema() {
     knowsLanguage: ["en-IN", "ta-IN"],
     address: {
       "@type": "PostalAddress",
+      streetAddress: BUSINESS_CONFIG.address.street,
       addressLocality: BUSINESS_CONFIG.address.city,
       addressRegion: BUSINESS_CONFIG.address.state,
+      postalCode: BUSINESS_CONFIG.address.postalCode,
       addressCountry: BUSINESS_CONFIG.address.country,
     },
     areaServed: {

@@ -7,7 +7,7 @@ import {
 } from "@/lib/data/repositories";
 
 describe("composeLongformSeo", () => {
-  it("produces original long-form content of at least 10000 words", () => {
+  it("produces original long-form content without a 10,000-word pad", () => {
     const service = getServiceBySlug("invisible-grills");
     const city = getLocationBySlug("chennai");
     const area = getAreaBySlug("chennai", "thiruvanmiyur");
@@ -21,7 +21,8 @@ describe("composeLongformSeo", () => {
       nearbyNames: ["Adyar", "Besant Nagar", "Kottivakkam"],
     });
 
-    expect(article.wordCount).toBeGreaterThanOrEqual(10000);
+    expect(article.wordCount).toBeGreaterThanOrEqual(800);
+    expect(article.wordCount).toBeLessThan(8000);
     expect(article.sections.length).toBeGreaterThan(15);
     expect(article.lead.toLowerCase()).not.toContain("feather guard");
     expect(article.lead.toLowerCase()).toContain("glory");

@@ -2,10 +2,12 @@ import { SITEMAP_CONFIG } from "@/config/sitemap";
 import { SITE_CONFIG } from "@/config/site";
 import { CHENNAI_PRIORITY_AREA_SLUGS } from "@/data/chennai-priority-areas";
 import { COIMBATORE_PRIORITY_AREA_SLUGS } from "@/data/coimbatore-priority-areas";
+import { CHENNAI_APARTMENT_AREAS } from "@/data/locations";
 import { STATIC_CORE_PATHS } from "@/lib/pages/static-core-paths";
 import { getIndexablePages } from "@/lib/pages/page-registry";
 import {
   getAreaBySlug,
+  getLocationBySlug,
   getLocations,
   getServices,
 } from "@/lib/data/repositories";
@@ -115,6 +117,19 @@ export function getPriorityServiceAreaPages(): PageRecord[] {
         const page = createServiceAreaPage(service, city, area);
         if (isPageIndexable(page)) add(page);
       }
+    }
+  }
+
+  // Named apartment projects in Chennai and Avadi, including ones outside the
+  // neighbourhood priority list.
+  for (const area of CHENNAI_APARTMENT_AREAS) {
+    const citySlug = area.parentId.replace(/^loc-/, "");
+    if (citySlug !== "chennai" && citySlug !== "avadi") continue;
+    const city = getLocationBySlug(citySlug);
+    if (!city) continue;
+    for (const service of services) {
+      const page = createServiceAreaPage(service, city, area);
+      if (isPageIndexable(page)) add(page);
     }
   }
 

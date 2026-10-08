@@ -10,11 +10,11 @@ import { buildServicePath } from "@/config/routes";
 const PILLARS = [
   {
     title: "Vision",
-    text: "Safer, more comfortable modern spaces across Tamil Nadu - without heavy iron clutter.",
+    text: "Safer balconies and windows for Chennai apartments and gated communities, without heavy iron clutter.",
   },
   {
     title: "Mission",
-    text: "Deliver reliable invisible-grill and safety solutions with careful measurement and professional installation.",
+    text: "Install invisible grills, safety nets, cloth hangers, sports nets and bird spikes after a measured site visit.",
   },
   {
     title: "Our Promise",
@@ -82,7 +82,7 @@ export function AboutIntro({
               {eyebrow ?? `About ${BUSINESS_CONFIG.name}`}
             </p>
             <h2 className="font-display text-3xl font-bold text-brand-900 sm:text-4xl">
-              {title ?? "Premium safety solutions for modern homes"}
+              {title ?? "Invisible grills and safety nets for Chennai apartments"}
             </h2>
             {body ?? (
               <>
@@ -101,14 +101,35 @@ export function AboutIntro({
                   >
                     safety nets
                   </Link>
-                  , bird netting and related protection systems for balconies, windows, terraces and
-                  utility areas across Tamil Nadu. Every project starts with a free site measurement so
-                  spacing, tension and fixing decisions follow the actual opening - not a brochure.
+                  ,{" "}
+                  <Link
+                    href={buildServicePath("cloth-hangers")}
+                    className="font-semibold text-brand-500 hover:text-brand-600"
+                  >
+                    cloth hangers
+                  </Link>
+                  ,{" "}
+                  <Link
+                    href={buildServicePath("sports-nets")}
+                    className="font-semibold text-brand-500 hover:text-brand-600"
+                  >
+                    sports nets
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href={buildServicePath("bird-spikes")}
+                    className="font-semibold text-brand-500 hover:text-brand-600"
+                  >
+                    bird spikes
+                  </Link>{" "}
+                  for balconies, windows and terraces in Chennai and within 150 km. Every project
+                  starts with a free site measurement so spacing, tension and fixing follow the
+                  actual opening.
                 </p>
                 <p className="text-base leading-8 text-ink-700">
-                  We focus on clear views, honest material grades and neat finishing for apartments,
-                  villas and high-rises - so families get practical protection without compromising the
-                  look of their home.
+                  Apartments and gated communities are most of the work, including ready-to-move and
+                  resale flats. We also cover Coimbatore and other major Tamil Nadu cities. Material
+                  grades are named in the written quote.
                 </p>
               </>
             )}

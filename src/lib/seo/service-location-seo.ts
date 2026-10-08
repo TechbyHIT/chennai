@@ -1,16 +1,31 @@
 import { BUSINESS_CONFIG } from "@/config/business";
 import { isChennaiBeltTown } from "@/config/chennai-region";
-import {
-  buildLandingKeywords,
-  formatHeadTermForTitle,
-  pickSeededHeadTerm,
-} from "@/data/keyword-clusters";
+import { buildLandingKeywords, pickSeededHeadTerm } from "@/data/keyword-clusters";
 import { generateCanonical } from "@/lib/seo/generate-canonical";
 import type { Area, Location } from "@/types/location";
 import type { Service } from "@/types/service";
 
-function pricingHrefNote(head: string, place: string) {
-  return `Compare ${head} price, cost and installation charges in ${place} after a free measurement visit — rates depend on openings, material grade and access.`;
+/** SERP title. The layout template appends " | Glory Grills" (15 characters). */
+function landingMetaTitle(serviceName: string, place: string) {
+  const withVisit = `${serviceName} in ${place} | Free Site Visit`;
+  if (withVisit.length + 15 <= 78) return withVisit;
+  const plain = `${serviceName} in ${place}`;
+  if (plain.length + 15 <= 78) return plain;
+  return plain.slice(0, 62).trim();
+}
+
+/**
+ * Snippet that answers the query in the first words. Belt towns keep the
+ * "near Chennai" phrase; other cities must not mention Chennai.
+ */
+function landingDescription(serviceName: string, place: string, beltTown: boolean) {
+  const where = beltTown ? `${place}, near Chennai,` : place;
+  const phone = BUSINESS_CONFIG.phone.display;
+  const primary = `${serviceName} in ${where} for apartments and gated communities. Free measurement and a written quote. Call ${phone}.`;
+  if (primary.length <= 160) return primary;
+  const compact = `${serviceName} in ${where.replace(/,$/, "")}. Free measurement and a written quote. Call ${phone}.`;
+  if (compact.length <= 160) return compact;
+  return compact.slice(0, 157).trimEnd() + ".";
 }
 
 /**
@@ -45,17 +60,18 @@ function prependApartmentStatusPhrases(
 export function buildServiceCitySeo(service: Service, city: Location) {
   const path = `/${service.slug}-in-${city.slug}/`;
   const seedKey = `${service.slug}|${city.slug}`;
+  // Title and H1 stay on the service name so the page can rank for
+  // "{service} in {city}". Alias head terms stay in the keyword list only.
   const head = pickSeededHeadTerm(service.slug, seedKey);
-  const headTitle = formatHeadTermForTitle(head);
-  const title = `${headTitle} in ${city.name} | ${BUSINESS_CONFIG.name}`;
+  const title = `${service.name} in ${city.name} | ${BUSINESS_CONFIG.name}`;
   // No brand here: the site title template already appends "| Glory Grills".
-  const metaTitle = `${headTitle} in ${city.name} | Free Site Visit`;
+  const metaTitle = landingMetaTitle(service.name, city.name);
   const beltTown = isChennaiBeltTown(city.slug);
-  const metaDescription = `Looking for ${head} in ${city.name}${beltTown ? " near Chennai" : ""}? ${pricingHrefNote(head, city.name)} Call ${BUSINESS_CONFIG.phone.display}.`;
-  const h1 = `${headTitle} in ${city.name}`;
+  const metaDescription = landingDescription(service.name, city.name, beltTown);
+  const h1 = `${service.name} in ${city.name}`;
   const subtitle = beltTown
-    ? `Measured ${head} installation for apartments, villas and homes in ${city.name}, within our Chennai service region.`
-    : `Measured ${head} installation for apartments, villas and homes in ${city.name}, Tamil Nadu.`;
+    ? `${service.name} installation for apartments and gated communities in ${city.name}, near Chennai. Free measurement, written quote.`
+    : `${service.name} installation for apartments and gated communities in ${city.name}, Tamil Nadu. Free measurement, written quote.`;
   const keywords = buildLandingKeywords({
     serviceSlug: service.slug,
     serviceName: service.name,
@@ -97,13 +113,15 @@ export function buildServiceAreaSeo(
   const path = `/${service.slug}/${stateSlug}/${city.slug}/${area.slug}/`;
   const seedKey = `${service.slug}|${city.slug}|${area.slug}`;
   const head = pickSeededHeadTerm(service.slug, seedKey);
-  const headTitle = formatHeadTermForTitle(head);
   const place = `${area.name}, ${city.name}`;
-  const title = `${headTitle} in ${place} | ${BUSINESS_CONFIG.name}`;
-  const metaTitle = `${headTitle} in ${place} | Free Site Visit`;
-  const metaDescription = `Looking for ${head} in ${area.name}, ${city.name}, Tamil Nadu? ${pricingHrefNote(head, area.name)} Call ${BUSINESS_CONFIG.phone.display}.`;
-  const h1 = `${headTitle} in ${area.name}, ${city.name}`;
-  const subtitle = `Measured ${head} installation for apartments and homes in ${area.name}, ${city.name}.`;
+  const title = `${service.name} in ${place} | ${BUSINESS_CONFIG.name}`;
+  const metaTitle = landingMetaTitle(service.name, place);
+  const beltTown = isChennaiBeltTown(city.slug);
+  const metaDescription = landingDescription(service.name, place, beltTown);
+  const h1 = `${service.name} in ${area.name}, ${city.name}`;
+  const subtitle = beltTown
+    ? `${service.name} installation for apartments and gated communities in ${area.name}, ${city.name}, near Chennai.`
+    : `${service.name} installation for apartments and gated communities in ${area.name}, ${city.name}.`;
   const keywords = buildLandingKeywords({
     serviceSlug: service.slug,
     serviceName: service.name,

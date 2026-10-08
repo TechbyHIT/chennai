@@ -1,13 +1,12 @@
 import { SITE_CONFIG } from "@/config/site";
 import type { MetadataRoute } from "next";
 
-const DISALLOW = [
-  "/admin/",
-  "/api/",
-  "/thank-you/",
-  "/search/",
-  "/*?q=",
-];
+/**
+ * Only block paths Google must not fetch.
+ * /search/ and /thank-you/ stay crawlable so their noindex tag can be seen.
+ * Blocking them made Search Console report "Blocked by robots.txt".
+ */
+const DISALLOW = ["/admin/", "/api/", "/*?q="];
 
 export default function robots(): MetadataRoute.Robots {
   return {

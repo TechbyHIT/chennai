@@ -6,14 +6,7 @@ import { INITIAL_SERVICES, SERVICE_CATEGORIES } from "@/data/initial-services";
 import { PROBLEMS } from "@/data/problems";
 import { PROPERTY_TYPES } from "@/data/property-types";
 import { buildTamilNaduLocations } from "@/lib/geo/build-tn-locations";
-import {
-  countScaledAreaTarget,
-  findServedCity,
-  getScaledAreasForCity,
-  iterateScaledAreaRefs,
-  resetScaledLocalitiesCache,
-  resolveScaledArea,
-} from "@/lib/geo/generate-scaled-localities";
+import { resetScaledLocalitiesCache } from "@/lib/geo/generate-scaled-localities";
 import { applyServiceMedia } from "@/lib/media/catalog";
 import type { Area, Landmark, Location } from "@/types/location";
 import type { Service } from "@/types/service";
@@ -22,7 +15,6 @@ const TN_LOCATIONS = buildTamilNaduLocations();
 const SERVICES_WITH_MEDIA = INITIAL_SERVICES.map(applyServiceMedia);
 
 let CURATED_AREAS: Area[] | null = null;
-let CURATED_KEYS: Set<string> | null = null;
 
 function getCuratedAreas(): Area[] {
   if (CURATED_AREAS) return CURATED_AREAS;
@@ -35,18 +27,11 @@ function getCuratedAreas(): Area[] {
     merged.push(area);
   }
   CURATED_AREAS = merged;
-  CURATED_KEYS = seen;
   return CURATED_AREAS;
-}
-
-function getCuratedKeys(): Set<string> {
-  getCuratedAreas();
-  return CURATED_KEYS ?? new Set();
 }
 
 export function resetAreasCache() {
   CURATED_AREAS = null;
-  CURATED_KEYS = null;
   resetScaledLocalitiesCache();
 }
 
@@ -106,18 +91,18 @@ export function getLocationById(id: string): Location | undefined {
 }
 
 /**
- * Area listing.
- * - With parentId: curated + scaled localities for that city (lazy).
- * - Without parentId: curated only (avoids loading ~525k areas into RAM).
- * - curatedOnly: curated INITIAL areas only.
+ * Public area listing is curated localities only.
+ * Generated "Layout 12 / Ward 4" names are not published: Google was crawling
+ * them into noindex shells and 5xx responses.
  */
 export function getAreas(options?: {
   publishedOnly?: boolean;
   parentId?: string;
   curatedOnly?: boolean;
+  /** Ignored. Kept so older callers still type-check. */
   scaledLimit?: number;
 }): Area[] {
-  const curated = getCuratedAreas().filter((area) => {
+  return getCuratedAreas().filter((area) => {
     if (area.state !== "Tamil Nadu") return false;
     if (options?.publishedOnly && area.publicationStatus !== "published") {
       return false;
@@ -125,40 +110,15 @@ export function getAreas(options?: {
     if (options?.parentId && area.parentId !== options.parentId) return false;
     return true;
   });
-
-  if (options?.curatedOnly || !options?.parentId) {
-    return curated;
-  }
-
-  const parent = getLocationById(options.parentId);
-  if (!parent?.isServed) return curated;
-
-  const city = findServedCity(parent.slug);
-  if (!city) return curated;
-
-  const scaled = getScaledAreasForCity(city, getCuratedKeys()).filter((area) => {
-    if (options.publishedOnly && area.publicationStatus !== "published") {
-      return false;
-    }
-    return true;
-  });
-
-  const limited =
-    typeof options.scaledLimit === "number"
-      ? scaled.slice(0, options.scaledLimit)
-      : scaled;
-
-  return [...curated, ...limited];
 }
 
-/** Curated + scaled served locality count for page-capacity math. */
+/** Published localities that belong to a city we actually serve. */
 export function countPublishedServedAreas(): number {
-  const curatedServed = getCuratedAreas().filter((area) => {
+  return getCuratedAreas().filter((area) => {
     if (area.publicationStatus !== "published") return false;
     const parent = getLocationById(area.parentId);
     return Boolean(parent?.isServed);
   }).length;
-  return curatedServed + countScaledAreaTarget();
 }
 
 export function getAreaBySlug(
@@ -168,36 +128,20 @@ export function getAreaBySlug(
   const location = getLocationBySlug(locationSlug);
   if (!location) return undefined;
 
-  const curated = getCuratedAreas().find(
+  return getCuratedAreas().find(
     (area) => area.slug === areaSlug && area.parentId === location.id,
   );
-  if (curated) return curated;
-
-  return resolveScaledArea(locationSlug, areaSlug, getCuratedKeys());
 }
 
 export function getAreaById(id: string): Area | undefined {
-  const curated = getCuratedAreas().find((area) => area.id === id);
-  if (curated) return curated;
-
-  // Scaled ids: area-scale-{citySlug}-{areaSlug}
-  const match = /^area-scale-([a-z0-9-]+)-(.+)$/.exec(id);
-  if (!match) return undefined;
-  const citySlug = match[1];
-  const areaSlug = match[2];
-  if (!citySlug || !areaSlug) return undefined;
-  return resolveScaledArea(citySlug, areaSlug, getCuratedKeys());
+  return getCuratedAreas().find((area) => area.id === id);
 }
 
 export function* iterateAllServedAreas(): Generator<Area> {
-  const curatedKeys = getCuratedKeys();
   for (const area of getCuratedAreas()) {
     const parent = getLocationById(area.parentId);
     if (!parent?.isServed) continue;
     if (area.publicationStatus !== "published") continue;
-    yield area;
-  }
-  for (const { area } of iterateScaledAreaRefs(curatedKeys)) {
     yield area;
   }
 }

@@ -15,7 +15,7 @@ export const BUSINESS_CONFIG = {
   name: "Glory Invisible Grills",
   legalName: "Glory Invisible Grills",
   description:
-    "Professional invisible grill installation for balconies, windows and high-rise homes across Tamil Nadu. Safety-focused stainless steel solutions with careful measurement and neat finishing.",
+    "Invisible grills, safety nets, cloth hangers, sports nets and bird spikes for apartments and gated communities in Chennai and within 150 km, plus major Tamil Nadu cities. Free site measurement and written quotes.",
   websiteUrl: publicWebsiteUrl(),
 
   phone: {
@@ -31,11 +31,11 @@ export const BUSINESS_CONFIG = {
   email: "gloryinvisiblegrills@gmail.com",
 
   address: {
-    street: "[STREET_ADDRESS]",
-    city: "Coimbatore",
-    district: "Coimbatore",
+    street: "1, 5/22, VGP Nagar, West Mogappair",
+    city: "Chennai",
+    district: "Chennai",
     state: "Tamil Nadu",
-    postalCode: "[POSTAL_CODE]",
+    postalCode: "600037",
     country: "India",
   },
 
@@ -48,7 +48,7 @@ export const BUSINESS_CONFIG = {
   defaultOpenGraphImage: "/images/services/invisible-grills/01.jpg",
 
   serviceArea: {
-    primaryCity: "Coimbatore",
+    primaryCity: "Chennai",
     state: "Tamil Nadu",
     country: "India",
   },
@@ -78,6 +78,8 @@ export const BUSINESS_CONFIG = {
     display: "Mon–Sat 9:00 AM – 7:00 PM · Sun by appointment",
   },
 
-  mapEmbedUrl: "[GOOGLE_MAP_EMBED_URL]",
-  googleMapsLink: "[GOOGLE_MAPS_LINK]",
+  mapEmbedUrl:
+    "https://maps.google.com/maps?q=1%2C%205%2F22%2C%20VGP%20Nagar%2C%20West%20Mogappair%2C%20Chennai%20600037&hl=en&z=16&output=embed",
+  googleMapsLink:
+    "https://www.google.com/maps/search/?api=1&query=1%2C%205%2F22%2C%20VGP%20Nagar%2C%20West%20Mogappair%2C%20Chennai%20600037",
 } as const;

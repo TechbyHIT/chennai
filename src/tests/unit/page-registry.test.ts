@@ -16,18 +16,21 @@ describe("page registry", () => {
     expect(getPageByPath("/locations/visakhapatnam/")).toBeUndefined();
   });
 
-  it("reports counts and capacity at the served-footprint scale", () => {
+  it("reports counts for curated pages only", () => {
     const counts = getPageCounts();
-    expect(counts.total).toBeGreaterThan(2_000_000);
-    expect(counts.byType["service-area"]).toBeGreaterThan(1_800_000);
+    expect(counts.total).toBeGreaterThan(500);
+    expect(counts.total).toBeLessThan(100_000);
+    expect(counts.byType["service-area"]).toBeGreaterThan(100);
+    expect(counts.byType["service-area"]).toBeLessThan(50_000);
     expect(estimatePossiblePageCapacity()).toBe(counts.total);
   });
 
-  it("resolves scaled service×area paths on demand", () => {
-    const page = getPageByPath(
-      "/invisible-grills/tamil-nadu/coimbatore/coimbatore-ward-1/",
-    );
-    expect(page?.pageType).toBe("service-area");
-    expect(page?.allowIndexing).toBe(true);
+  it("does not publish generated doorway localities", () => {
+    expect(
+      getPageByPath("/invisible-grills/tamil-nadu/coimbatore/coimbatore-ward-1/"),
+    ).toBeUndefined();
+    expect(
+      getPageByPath("/invisible-grills/tamil-nadu/chennai/anna-nagar-extension/"),
+    ).toBeUndefined();
   });
 });

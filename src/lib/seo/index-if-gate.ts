@@ -204,7 +204,7 @@ export function evaluateLandingIndexIf(input: {
     input.area?.qualityScore ?? 100,
   );
 
-  const wordCount = input.wordCount ?? Math.max(minWords, 10_000);
+  const wordCount = input.wordCount ?? minWords;
   const faqCount = input.faqCount ?? 8;
   const internalLinkCount = input.internalLinkCount ?? 12;
   const hasSchema = input.hasSchema ?? true;
